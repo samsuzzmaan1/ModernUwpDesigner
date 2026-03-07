@@ -70,5 +70,5 @@
     <Reference Include="PresentationCore" />
   </ItemGroup>
 
-  <Import Project="..\ModernUwpDesigner.Shared\ModernUwpDesigner.Shared.projitems" Label="Shared" />
+  <!--<Import Project="..\ModernUwpDesigner.Shared\ModernUwpDesigner.Shared.projitems" Label="Shared" />-->
 </Project>

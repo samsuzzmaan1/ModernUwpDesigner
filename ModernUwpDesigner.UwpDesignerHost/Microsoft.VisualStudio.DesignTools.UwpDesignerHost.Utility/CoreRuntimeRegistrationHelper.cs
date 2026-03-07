@@ -58,7 +58,7 @@ internal class CoreRuntimeRegistrationHelper
 
 	private IEnumerable<HostPackageDependency> GetCoreRuntimeForProject(IAppPackageHelper appPackageHelper)
 	{
-		string property = VS2026CompatibleGetProperty.GetPropertyCompat(hostProject, "CoreRuntimeSDKName");
+		string property = hostProject.GetPropertyCompat("CoreRuntimeSDKName");
 		if (!string.IsNullOrEmpty(property) && !IsCPlusPlus)
 		{
 			SdkName sdkName = new SdkName(property);

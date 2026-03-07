@@ -197,7 +197,7 @@ internal sealed class AppxPlatformOnlyShadowCopyWorker : UwpHostShadowCopyWorker
 			{
 				return;
 			}
-			string property = VS2026CompatibleGetProperty.GetPropertyCompat(hostProject, "CoreRuntimeSDKName");
+			string property = hostProject.GetPropertyCompat("CoreRuntimeSDKName");
 			if (string.IsNullOrEmpty(property))
 			{
 				return;

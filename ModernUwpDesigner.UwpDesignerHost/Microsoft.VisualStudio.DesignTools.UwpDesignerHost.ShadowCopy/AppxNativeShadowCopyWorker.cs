@@ -25,7 +25,7 @@ internal class AppxNativeShadowCopyWorker : AppxRecipeShadowCopyWorker
 		{
 			return false;
 		}
-		string a = VS2026CompatibleGetProperty.GetPropertyCompat(base.HostProject, "UseDotNetNativeToolchain") ?? "";
+		string a = base.HostProject.GetPropertyCompat("UseDotNetNativeToolchain") ?? "";
 		if (!string.Equals(a, "true", StringComparison.InvariantCultureIgnoreCase))
 		{
 			return false;
