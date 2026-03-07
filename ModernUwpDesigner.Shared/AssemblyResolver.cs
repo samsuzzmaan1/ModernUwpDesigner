@@ -6,9 +6,9 @@ using System.Runtime.CompilerServices;
 namespace System.Runtime.CompilerServices
 {
 	[AttributeUsage(AttributeTargets.Method, Inherited = false)]
-	internal sealed class ModuleInitializerAttribute : Attribute
+	public sealed class ModuleInitializerAttribute : Attribute
 	{
-		internal ModuleInitializerAttribute()
+		public ModuleInitializerAttribute()
 		{
 		}
 	}
