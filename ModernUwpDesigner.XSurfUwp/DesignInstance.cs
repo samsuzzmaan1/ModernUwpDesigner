@@ -9,7 +9,7 @@ namespace XSurfUwp;
 public partial class DesignInstance : MarkupExtension
 {
 	[field: CompilerGenerated]
-	public System.Type? Type
+	public Type Type
 	{
 		[CompilerGenerated]
 		get;
@@ -35,34 +35,34 @@ public partial class DesignInstance : MarkupExtension
 		set;
 	}
 
-	public void SetTypeValue(object? value)
+	public void SetTypeValue(object value)
 	{
 		if (value is string text)
 		{
-			value = System.Type.GetType(text);
+			value = Type.GetType(text);
 		}
-		Type = (System.Type?)value;
+		Type = (Type)value;
 	}
 
-	protected override object? ProvideValue()
+	protected override object ProvideValue()
 	{
 		return CreateInstance();
 	}
 
-	public object? CreateInstance()
+	public object CreateInstance()
 	{
-		if (Type == (System.Type?)null || !IsDesignTimeCreatable)
+		if (Type == null || !IsDesignTimeCreatable)
 		{
 			return null;
 		}
-		object? obj;
+		object obj;
 		if (!CreateList)
 		{
 			obj = Activator.CreateInstance(Type);
 		}
 		else
 		{
-			System.Type type = typeof(List<>).MakeGenericType(new System.Type[1] { Type });
+            Type type = typeof(List<>).MakeGenericType([Type]);
 			obj = Activator.CreateInstance(type);
 			if (obj is IList list)
 			{

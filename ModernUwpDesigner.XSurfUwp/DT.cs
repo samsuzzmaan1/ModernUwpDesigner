@@ -1,5 +1,4 @@
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Runtime.InteropServices;
 using Windows.UI.Xaml;
@@ -357,7 +356,7 @@ public static class DT
 	{
 	}
 
-	public static object? GetCustomTag(DependencyObject dependencyObject)
+	public static object GetCustomTag(DependencyObject dependencyObject)
 	{
 		return null;
 	}
@@ -446,7 +445,7 @@ public static class DT
 			d.ClearValue(propertyToSet);
 			return;
 		}
-		if (string.Equals(((object)d).GetType().FullName, "Windows.UI.Xaml.Controls.PersonPicture") && num < 0.5)
+		if (string.Equals(d.GetType().FullName, "Windows.UI.Xaml.Controls.PersonPicture") && num < 0.5)
 		{
 			num = 0.5;
 		}
@@ -466,7 +465,7 @@ public static class DT
     [DynamicWindowsRuntimeCast(typeof(PivotItem))]
     private static void IsPivotItemSelectedPropertyChangedCallback(DependencyObject d, DependencyPropertyChangedEventArgs e)
 	{
-		if (d is PivotItem pivotItem && GetIsPivotItemSelected(pivotItem) && ElementUtilities.GetVisualTreeAncestorOfType(pivotItem, typeof(Pivot)) is Pivot pivot && ((System.Collections.Generic.ICollection<object>)(object)pivot.Items).Contains((object)pivotItem))
+		if (d is PivotItem pivotItem && GetIsPivotItemSelected(pivotItem) && ElementUtilities.GetVisualTreeAncestorOfType(pivotItem, typeof(Pivot)) is Pivot pivot && pivot.Items.Contains(pivotItem))
 		{
 			pivot.SelectedItem = pivotItem;
 		}
@@ -544,7 +543,7 @@ public static class DT
 		ReconcileRuntimeAndDesignTimeValues(d, UIElement.UseLayoutRoundingProperty, DesignUseLayoutRoundingProperty, RuntimeUseLayoutRoundingProperty);
 	}
 
-	private static void ReconcileRuntimeAndDesignTimeValues(DependencyObject d, DependencyProperty propertyToSet, DependencyProperty designProperty, DependencyProperty runtimeProperty, Func<object, object>? designValueTransform = null)
+	private static void ReconcileRuntimeAndDesignTimeValues(DependencyObject d, DependencyProperty propertyToSet, DependencyProperty designProperty, DependencyProperty runtimeProperty, Func<object, object> designValueTransform = null)
 	{
 		object obj = ReadPropertyValue(d, designProperty);
 		object obj2 = ReadPropertyValue(d, runtimeProperty);
@@ -566,17 +565,13 @@ public static class DT
     [DynamicWindowsRuntimeCast(typeof(AppBar))]
     private static void BottomAppBarChangedCallback(DependencyObject d, DependencyPropertyChangedEventArgs e)
 	{
-#nullable disable
         Application.Current.SetBottomAppBar(e.NewValue as AppBar);
-#nullable restore
     }
 
     [DynamicWindowsRuntimeCast(typeof(AppBar))]
     private static void TopAppBarChangedCallback(DependencyObject d, DependencyPropertyChangedEventArgs e)
 	{
-#nullable disable
         Application.Current.SetTopAppBar(e.NewValue as AppBar);
-#nullable restore
     }
 
     [DynamicWindowsRuntimeCast(typeof(SplitView))]
@@ -605,7 +600,7 @@ public static class DT
     [DynamicWindowsRuntimeCast(typeof(HubSection))]
     private static void IsHubSectionSelectedPropertyChangedCallback(DependencyObject d, DependencyPropertyChangedEventArgs e)
 	{
-		if (!(d is HubSection hubSection) || !(e.NewValue is bool) || !(bool)e.NewValue)
+		if (d is not HubSection hubSection || e.NewValue is not bool || !(bool)e.NewValue)
 		{
 			return;
 		}
@@ -613,7 +608,7 @@ public static class DT
 		{
 			if (parent is Hub hub)
 			{
-				if (!((System.Collections.Generic.ICollection<HubSection>)hub.SectionsInView).Contains(hubSection) || !ElementUtilities.IsFullyWithinBoundsOf(hubSection, hub))
+                if (!hub.SectionsInView.Contains(hubSection) || !ElementUtilities.IsFullyWithinBoundsOf(hubSection, hub))
 				{
 					hub.ScrollToSection(hubSection);
 				}
@@ -628,24 +623,16 @@ public static class DT
 	{
 		object obj = target.ReadLocalValue(dp);
 		if (obj == DependencyProperty.UnsetValue && target.GetValue(FrameworkElement.StyleProperty) is Style style)
-		{
-			System.Collections.Generic.IEnumerator<SetterBase> enumerator = ((System.Collections.Generic.IEnumerable<SetterBase>)style.Setters).GetEnumerator();
-			try
+        {
+			foreach (var setterBase in style.Setters)
 			{
-				while (((System.Collections.IEnumerator)enumerator).MoveNext())
-				{
-					Setter setter = (Setter)enumerator.Current;
-					if (setter.Property == dp)
-					{
-						return setter.Value;
-					}
-				}
-			}
-			finally
-			{
-				((System.IDisposable)enumerator)?.Dispose();
-			}
-		}
-		return obj;
+                if (setterBase is Setter setter && setter.Property == dp)
+                {
+                    return setter.Value;
+                }
+            }
+        }
+
+        return obj;
 	}
 }

@@ -10,7 +10,7 @@ public partial class FallbackControl : ContentControl, IFallbackType
     [DynamicWindowsRuntimeCast(typeof(ControlTemplate))]
     public FallbackControl()
 	{
-		ResourceDictionary resources = Application.Current.ContentWrapper.Resources;
-		base.Template = (ControlTemplate)resources["__XSurfUwp.Fallback.FallbackControl.Template__"];
+		ResourceDictionary resources = Application.ContentWrapper.Resources;
+        Template = (ControlTemplate)resources["__XSurfUwp.Fallback.FallbackControl.Template__"];
 	}
 }

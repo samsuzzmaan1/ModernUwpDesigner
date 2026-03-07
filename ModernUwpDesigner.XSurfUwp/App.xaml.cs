@@ -2,13 +2,11 @@
 
 using Microsoft.System;
 using System;
-using System.CodeDom.Compiler;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Runtime.InteropServices;
-using System.Runtime.InteropServices.WindowsRuntime;
 using System.Threading;
 using Windows.ApplicationModel;
 using Windows.ApplicationModel.Activation;
@@ -19,7 +17,6 @@ using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Markup;
 using Windows.UI.Xaml.Media;
-using Windows.UI.Xaml.Navigation;
 using Windows.UI.Xaml.Shapes;
 using WinRT;
 using XSurfUwp.XSurfUwp_XamlTypeInfo;
@@ -32,7 +29,7 @@ namespace XSurfUwp
     /// </summary>
     public sealed partial class Application : Windows.UI.Xaml.Application, ITapBridge, IXamlMetadataProvider
     {
-        private ThreadLocal<ThreadLocalApp> localApp = new(() => new ThreadLocalApp());
+        private readonly ThreadLocal<ThreadLocalApp> localApp = new(() => new ThreadLocalApp());
 
         private UserApplicationInfo userApplicationInfo;
 
@@ -46,7 +43,7 @@ namespace XSurfUwp
 
         public new static Application Current => (Application)Windows.UI.Xaml.Application.Current;
 
-        internal ContentWrapper ContentWrapper => (ContentWrapper)Window.Current.Content;
+        internal static ContentWrapper ContentWrapper => (ContentWrapper)Window.Current.Content;
 
 #nullable disable
         public ThreadLocalApp Local => localApp.Value;
@@ -135,9 +132,7 @@ namespace XSurfUwp
 
         public object GetHitTestRoot()
         {
-#nullable disable
             return ContentWrapper?.ContentHolder.Child;
-#nullable restore
         }
 
         public void SetBottomAppBar(AppBar appBar)
@@ -148,10 +143,9 @@ namespace XSurfUwp
         {
         }
 
-        private void Window_SizeChanged(object sender, Windows.UI.Core.WindowSizeChangedEventArgs e)
+        private void Window_SizeChanged(object sender, WindowSizeChangedEventArgs e)
         {
-            FrameworkElement? frameworkElement = ContentWrapper?.BackgroundElement;
-            if (frameworkElement != null)
+            if (ContentWrapper?.BackgroundElement is { } frameworkElement)
             {
                 frameworkElement.Width = e.Size.Width;
                 frameworkElement.Height = e.Size.Height;
@@ -163,7 +157,7 @@ namespace XSurfUwp
         {
             if (ContentWrapper is not null)
             {
-                FrameworkElement? frameworkElement = ContentWrapper.PanZoom;
+                FrameworkElement frameworkElement = ContentWrapper.PanZoom;
                 if (frameworkElement?.RenderTransform is CompositeTransform compositeTransform)
                 {
                     frameworkElement.Opacity = 1.0;
@@ -190,11 +184,8 @@ namespace XSurfUwp
 
         public void SetContentBorder(string contentBorder)
         {
-            Rectangle? rectangle = ContentWrapper?.HairlineBorder;
-            if (rectangle != null)
-            {
-                rectangle.Stroke = new SolidColorBrush((Windows.UI.Color)XamlBindingHelper.ConvertValue(typeof(Windows.UI.Color), contentBorder));
-            }
+            Rectangle rectangle = ContentWrapper?.HairlineBorder;
+            rectangle?.Stroke = new SolidColorBrush((Windows.UI.Color)XamlBindingHelper.ConvertValue(typeof(Windows.UI.Color), contentBorder));
         }
 
         [DynamicWindowsRuntimeCast(typeof(UIElement))]
@@ -206,7 +197,9 @@ namespace XSurfUwp
                 DT.SetRootWidth(dependencyObject, width);
                 DT.SetRootHeight(dependencyObject, height);
             }
-            Local.DeviceSize = new Windows.Foundation.Size(width, height);
+
+            Local.DeviceSize = new Size(width, height);
+
             if (obj is UIElement uIElement)
             {
                 uIElement.UpdateLayout();
@@ -216,7 +209,7 @@ namespace XSurfUwp
         public bool TrySerialize(object obj, out string typeName, out string value, out bool isValueType)
         {
 #nullable disable
-            System.Type type = obj?.GetType();
+            Type type = obj?.GetType();
             if (type == typeof(DependencyObject))
             {
                 typeName = string.Empty;
@@ -224,28 +217,33 @@ namespace XSurfUwp
                 isValueType = false;
                 return false;
             }
+
             TypeInfo val = ((type != null) ? IntrospectionExtensions.GetTypeInfo(type) : null);
-            if (val != null && ((System.Type)(object)val).IsEnum)
+
+            if (val != null && ((Type)(object)val).IsEnum)
             {
-                typeName = ((System.Type)(object)val).FullName;
+                typeName = ((Type)(object)val).FullName;
                 value = obj.ToString();
                 isValueType = true;
                 return true;
             }
-            if (val != null && !((System.Type)(object)val).IsValueType && !(obj is string))
+
+            if (val != null && !((Type)(object)val).IsValueType && obj is not string)
             {
-                typeName = ((System.Type)(object)val).FullName;
+                typeName = ((Type)(object)val).FullName;
                 value = string.Empty;
                 isValueType = false;
                 return true;
             }
-            if (obj is System.DateTime)
+
+            if (obj is DateTime time)
             {
-                typeName = ((System.Type)(object)val).FullName;
-                value = ((System.DateTime)obj).ToString("o");
+                typeName = ((Type)(object)val).FullName;
+                value = time.ToString("o");
                 isValueType = true;
                 return true;
             }
+
             typeName = string.Empty;
             value = string.Empty;
             isValueType = false;
@@ -257,33 +255,25 @@ namespace XSurfUwp
         {
             try
             {
-                System.Type typeFromHandle = typeof(Debug);
+                Type typeFromHandle = typeof(Debug);
                 TypeInfo typeInfo = IntrospectionExtensions.GetTypeInfo(typeFromHandle);
-                System.Collections.Generic.IEnumerator<FieldInfo> enumerator = typeInfo.DeclaredFields.GetEnumerator();
-                try
+
+                foreach (var field in typeInfo.DeclaredFields)
                 {
-                    while (((System.Collections.IEnumerator)enumerator).MoveNext())
+                    if (field.Name == "s_ShowAssertDialog")
                     {
-                        FieldInfo current = enumerator.Current;
-                        if (((MemberInfo)current).Name == "s_ShowAssertDialog")
+                        Action<string, string, string> val = delegate
                         {
-                            Action<string, string, string> val = delegate
-                            {
-                            };
-                            current.SetValue((object?)null, (object)val);
-                        }
-                        else if (((MemberInfo)current).Name == "s_ShowDialog")
-                        {
-                            Action<string, string, string, string> val2 = delegate
-                            {
-                            };
-                            current.SetValue((object?)null, (object)val2);
-                        }
+                        };
+                        field.SetValue(null, val);
                     }
-                }
-                finally
-                {
-                    ((System.IDisposable)enumerator)?.Dispose();
+                    else if (field.Name == "s_ShowDialog")
+                    {
+                        Action<string, string, string, string> val2 = delegate
+                        {
+                        };
+                        field.SetValue(null, val2);
+                    }
                 }
             }
             catch
@@ -293,68 +283,61 @@ namespace XSurfUwp
 
         private static void ReadProjectInfo()
         {
-            StorageFile? storageFile = null;
+            StorageFile storageFile;
             try
             {
                 StorageFolder installedLocation = Package.Current.InstalledLocation;
                 IAsyncOperation<StorageFile> fileAsync = installedLocation.GetFileAsync("__ProjectInfo__.txt");
-                ((System.Threading.Tasks.Task)WindowsRuntimeSystemExtensions.AsTask<StorageFile>(fileAsync)).Wait();
+                fileAsync.AsTask().Wait();
                 storageFile = fileAsync.GetResults();
             }
-            catch (System.Exception)
+            catch (Exception)
             {
                 storageFile = null;
             }
             if (storageFile != null)
             {
                 IAsyncOperation<string> asyncOperation = FileIO.ReadTextAsync(storageFile);
-                ((System.Threading.Tasks.Task)WindowsRuntimeSystemExtensions.AsTask<string>(asyncOperation)).Wait();
+                asyncOperation.AsTask().Wait();
                 ProjectInfo.InfoStore = asyncOperation.GetResults();
             }
         }
 
-        public IXamlType GetXamlType(System.Type type)
+        public IXamlType GetXamlType(Type type)
         {
-            if (_provider == null)
-            {
-                _provider = new XamlTypeInfoProvider();
-            }
+            _provider ??= new XamlTypeInfoProvider();
             return _provider.GetXamlTypeByType(type) ?? GetUserAppXamlType(type);
         }
 
         public IXamlType GetXamlType(string fullName)
         {
-            if (_provider == null)
-            {
-                _provider = new XamlTypeInfoProvider();
-            }
+            _provider ??= new XamlTypeInfoProvider();
             return _provider.GetXamlTypeByName(fullName) ?? GetUserAppXamlType(fullName);
         }
 
         public XmlnsDefinition[] GetXmlnsDefinitions()
         {
-            return new XmlnsDefinition[0];
+            return Array.Empty<XmlnsDefinition>();
         }
 
         private void EnsureUserAppIXMP()
         {
             if (metaDataRetrieveAttempted)
-            {
                 return;
-            }
+
             metaDataRetrieveAttempted = true;
-            UserApplicationInfo? userApplicationInfo = GetUserApplicationInfo();
-            if (userApplicationInfo == null)
-            {
+
+            UserApplicationInfo userApplicationInfo = GetUserApplicationInfo();
+            if (userApplicationInfo is null)
                 return;
-            }
+
             string className = userApplicationInfo.UserApplicationRootNamespace + "." + userApplicationInfo.UserApplicationProjectName + "_XamlTypeInfo.XamlMetaDataProvider";
             xamlMetadataProvider = LoadUserAppIXMP(userApplicationInfo.UserApplicationFullAssemblyName, className);
-            if (xamlMetadataProvider == null)
+            if (xamlMetadataProvider is null)
             {
                 string className2 = userApplicationInfo.UserApplicationRootNamespace + ".XamlMetaDataProvider";
                 xamlMetadataProvider = LoadUserAppIXMP(userApplicationInfo.UserApplicationFullAssemblyName, className2);
-                if (xamlMetadataProvider == null)
+                if (xamlMetadataProvider is null)
                 {
                     string typeName = userApplicationInfo.UserApplicationRootNamespace + "." + userApplicationInfo.UserApplicationProjectName + "_XamlTypeInfo.XamlTypeInfoProvider";
                     userAppTypeInfoProvider = LoadUserAppIXMPReflection(userApplicationInfo.UserApplicationFullAssemblyName, typeName);
@@ -362,107 +345,101 @@ namespace XSurfUwp
             }
         }
 
-        private IXamlMetadataProvider LoadUserAppIXMP(string assemblyName, string className)
+        private static IXamlMetadataProvider LoadUserAppIXMP(string assemblyName, string className)
         {
-#nullable disable
-            object instance = null;
-
             try
             {
-                var factory = (WinRT.Interop.IActivationFactory)WinRT.ActivationFactory.Get(className);
-                instance = factory.ActivateInstance();
+                var factory = (WinRT.Interop.IActivationFactory)ActivationFactory.Get(className);
+                object instance = factory.ActivateInstance();
                 return instance as IXamlMetadataProvider;
             }
             catch
             {
                 return (IXamlMetadataProvider)LoadUserAppIXMPReflection(assemblyName, className);
             }
-#nullable restore
         }
 
         // TODO: Cleanup
-        private object LoadUserAppIXMPReflection(string assemblyName, string typeName)
+        private static object LoadUserAppIXMPReflection(string assemblyName, string typeName)
         {
-#nullable disable
-            //IL_0001: Unknown result type (might be due to invalid IL or missing references)
-            //IL_000b: Expected O, but got Unknown
             try
             {
                 Assembly val = Assembly.Load(new AssemblyName(assemblyName));
                 return Activator.CreateInstance(val.GetType(typeName));
             }
-            catch (System.Exception)
+            catch (Exception)
             {
                 try
                 {
                     Assembly assembly = Assembly.LoadFrom($"{assemblyName.Split(',').FirstOrDefault()}.dll");
-                    return System.Activator.CreateInstance(assembly.GetType(typeName));
+                    return Activator.CreateInstance(assembly.GetType(typeName));
                 }
                 catch
                 {
                     try
                     {
                         Assembly assembly = Assembly.LoadFrom($"{assemblyName.Split(',').FirstOrDefault()}.Projection.dll");
-                        return System.Activator.CreateInstance(assembly.GetType(typeName));
+                        return Activator.CreateInstance(assembly.GetType(typeName));
                     } catch { }
                 }
 
                 return null;
             }
-#nullable restore
         }
 
-        public IXamlType GetUserAppXamlType(System.Type type)
+        public IXamlType GetUserAppXamlType(Type type)
         {
-#nullable disable
             EnsureUserAppIXMP();
-            if (userAppTypeInfoProvider != null)
+
+            if (userAppTypeInfoProvider is not null)
             {
-                return ((MethodBase)RuntimeReflectionExtensions.GetRuntimeMethod(userAppTypeInfoProvider.GetType(), "GetXamlTypeByType", new System.Type[1] { typeof(System.Type) })).Invoke(userAppTypeInfoProvider, new object[1] { type }) as IXamlType;
+                return userAppTypeInfoProvider.GetType().GetRuntimeMethod("GetXamlTypeByType", [typeof(Type)]).Invoke(userAppTypeInfoProvider, [type]) as IXamlType;
             }
-            if (xamlMetadataProvider != null)
+
+            if (xamlMetadataProvider is not null)
             {
                 return xamlMetadataProvider.GetXamlType(type);
             }
+
             return null;
-#nullable restore
         }
 
         public IXamlType GetUserAppXamlType(string fullName)
         {
-#nullable disable
             EnsureUserAppIXMP();
-            if (userAppTypeInfoProvider != null)
+
+            if (userAppTypeInfoProvider is not null)
             {
-                return ((MethodBase)RuntimeReflectionExtensions.GetRuntimeMethod(userAppTypeInfoProvider.GetType(), "GetXamlTypeByName", new System.Type[1] { typeof(string) })).Invoke(userAppTypeInfoProvider, new object[1] { fullName }) as IXamlType;
+                return userAppTypeInfoProvider.GetType().GetRuntimeMethod("GetXamlTypeByName", [typeof(string)]).Invoke(userAppTypeInfoProvider, [fullName]) as IXamlType;
             }
-            if (xamlMetadataProvider != null)
+
+            if (xamlMetadataProvider is not null)
             {
                 return xamlMetadataProvider.GetXamlType(fullName);
             }
+
             return null;
-#nullable restore
         }
 
-        private UserApplicationInfo? GetUserApplicationInfo()
+        private UserApplicationInfo GetUserApplicationInfo()
         {
             if (userApplicationInfo == null)
             {
-                StorageFile? storageFile = null;
+                StorageFile storageFile = null;
                 try
                 {
                     StorageFolder installedLocation = Package.Current.InstalledLocation;
                     IAsyncOperation<StorageFile> fileAsync = installedLocation.GetFileAsync("UserApplicationInfo.txt");
-                    ((System.Threading.Tasks.Task)WindowsRuntimeSystemExtensions.AsTask<StorageFile>(fileAsync)).Wait();
+                    fileAsync.AsTask().Wait();
                     storageFile = fileAsync.GetResults();
                 }
-                catch (System.Exception ex) when (ex is AggregateException || ex is FileNotFoundException)
+                catch (Exception ex) when (ex is AggregateException || ex is FileNotFoundException)
                 {
                 }
                 if (storageFile != null)
                 {
                     IAsyncOperation<string> asyncOperation = FileIO.ReadTextAsync(storageFile);
-                    ((System.Threading.Tasks.Task)WindowsRuntimeSystemExtensions.AsTask<string>(asyncOperation)).Wait();
+                    asyncOperation.AsTask().Wait();
                     string results = asyncOperation.GetResults();
                     if (results != null)
                     {
@@ -478,7 +455,7 @@ namespace XSurfUwp
     {
         static void Main(string[] args)
         {
-            global::Windows.UI.Xaml.Application.Start((p) =>
+            Windows.UI.Xaml.Application.Start((p) =>
             {
                 new Application();
             });

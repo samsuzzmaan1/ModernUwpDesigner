@@ -5,7 +5,7 @@ namespace XSurfUwp.Fallback;
 
 public partial class FallbackStyleSelector : StyleSelector, IFallbackType
 {
-	protected override Style? SelectStyleCore(object item, DependencyObject container)
+	protected override Style SelectStyleCore(object item, DependencyObject container)
 	{
 		return null;
 	}

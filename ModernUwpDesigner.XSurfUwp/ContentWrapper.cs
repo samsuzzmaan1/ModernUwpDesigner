@@ -60,28 +60,33 @@ internal partial class ContentWrapper : UserControl
 
 	public ContentWrapper()
 	{
-		//IL_0011: Unknown result type (might be due to invalid IL or missing references)
-		//IL_001b: Expected O, but got Unknown
-		base.Resources.Source = new Uri("ms-appx:///__SurfaceResources__.xaml");
-		Canvas canvas = new Canvas();
-		BackgroundElement = new Rectangle();
-		BackgroundElement.Width = Window.Current.Bounds.Width;
-		BackgroundElement.Height = Window.Current.Bounds.Height;
-		((System.Collections.Generic.ICollection<UIElement>)(object)canvas.Children).Add((UIElement)BackgroundElement);
-		Grid grid = new Grid
-		{
+        //IL_0011: Unknown result type (might be due to invalid IL or missing references)
+        //IL_001b: Expected O, but got Unknown
+        Resources.Source = new Uri("ms-appx:///__SurfaceResources__.xaml");
+
+        BackgroundElement = new Rectangle
+        {
+            Width = Window.Current.Bounds.Width,
+            Height = Window.Current.Bounds.Height
+        };
+
+		Canvas canvas = new();
+        canvas.Children.Add(BackgroundElement);
+
+		Grid grid = new()
+        {
 			MaxWidth = 10000.0,
 			MaxHeight = 10000.0,
 			RowDefinitions = 
 			{
 				new RowDefinition
 				{
-					Height = Windows.UI.Xaml.GridLength.Auto
+					Height = GridLength.Auto
 				},
 				new RowDefinition(),
 				new RowDefinition
 				{
-					Height = Windows.UI.Xaml.GridLength.Auto
+					Height = GridLength.Auto
 				}
 			}
 		};
@@ -97,15 +102,15 @@ internal partial class ContentWrapper : UserControl
 			StrokeThickness = 1.0
 		};
 		Grid.SetRowSpan(HairlineBorder, 3);
-		((System.Collections.Generic.ICollection<UIElement>)(object)grid.Children).Add((UIElement)ContentHolder);
-		((System.Collections.Generic.ICollection<UIElement>)(object)grid.Children).Add((UIElement)TopAppBarHolder);
-		((System.Collections.Generic.ICollection<UIElement>)(object)grid.Children).Add((UIElement)BottomAppBarHolder);
-		((System.Collections.Generic.ICollection<UIElement>)(object)grid.Children).Add((UIElement)HairlineBorder);
+		grid.Children.Add(ContentHolder);
+		grid.Children.Add(TopAppBarHolder);
+		grid.Children.Add(BottomAppBarHolder);
+		grid.Children.Add(HairlineBorder);
 		grid.RenderTransform = new CompositeTransform();
 		grid.Opacity = 0.0;
 		PanZoom = grid;
-		((System.Collections.Generic.ICollection<UIElement>)(object)canvas.Children).Add((UIElement)grid);
-		base.Content = canvas;
+		canvas.Children.Add(grid);
+        Content = canvas;
 	}
 
     [DynamicWindowsRuntimeCast(typeof(Page))]
@@ -114,7 +119,7 @@ internal partial class ContentWrapper : UserControl
 		ContentHolder.Child = content;
 		if (content is Page && !ApiInformation.IsApiContractPresent("Windows.Foundation.UniversalApiContract", 7))
 		{
-			Binding binding = new Binding
+			Binding binding = new()
 			{
 				Mode = BindingMode.OneWay,
 				Source = content,

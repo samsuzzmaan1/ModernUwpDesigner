@@ -7,9 +7,9 @@ using XSurfUwp.Fallback;
 
 namespace XSurfUwp.Fallback
 {
-    [global::WinRT.WindowsRuntimeType]
+    [WindowsRuntimeType]
     [Guid("732EA77E-3430-47DF-9F0A-F8EED39E115A")]
-    [global::WinRT.WindowsRuntimeHelperType(typeof(ABI.XSurfUwp.Fallback.IFallbackTypeProjectedABI))]
+    [WindowsRuntimeHelperType(typeof(ABI.XSurfUwp.Fallback.IFallbackTypeProjectedABI))]
     public interface IFallbackType
     {
 
@@ -34,16 +34,16 @@ namespace ABI.XSurfUwp.Fallback
     [EditorBrowsable(EditorBrowsableState.Never)]
     public static class IFallbackTypeMethods
     {
-        public static ref readonly global::System.Guid IID
+        public static ref readonly Guid IID
         {
-            [global::System.Runtime.CompilerServices.MethodImpl(global::System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
+            [MethodImpl(MethodImplOptions.AggressiveInlining)]
             get
             {
-                global::System.ReadOnlySpan<byte> data = [0x7e, 0xa7, 0x2e, 0x73, 0x30, 0x34, 0xdf, 0x47, 0x9f, 0x0a, 0xf8, 0xee, 0xd3, 0x9e, 0x11, 0x5a];
-                return ref global::System.Runtime.CompilerServices.Unsafe.As<byte, global::System.Guid>(ref global::System.Runtime.InteropServices.MemoryMarshal.GetReference(data));
+                ReadOnlySpan<byte> data = [0x7e, 0xa7, 0x2e, 0x73, 0x30, 0x34, 0xdf, 0x47, 0x9f, 0x0a, 0xf8, 0xee, 0xd3, 0x9e, 0x11, 0x5a];
+                return ref Unsafe.As<byte, Guid>(ref MemoryMarshal.GetReference(data));
             }
         }
 
-        public static global::System.IntPtr AbiToProjectionVftablePtr => ABI.XSurfUwp.Fallback.IFallbackTypeProjectedABI.AbiToProjectionVftablePtr;
+        public static global::System.IntPtr AbiToProjectionVftablePtr => IFallbackTypeProjectedABI.AbiToProjectionVftablePtr;
     }
 }

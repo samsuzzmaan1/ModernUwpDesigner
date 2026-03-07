@@ -8,12 +8,12 @@ namespace XSurfUwp;
 
 internal static class ElementUtilities
 {
-	public static DependencyObject? GetVisualTreeAncestorOfType(DependencyObject element, System.Type type)
+	public static DependencyObject GetVisualTreeAncestorOfType(DependencyObject element, Type type)
 	{
 		TypeInfo typeInfo = IntrospectionExtensions.GetTypeInfo(type);
 		while (element != null)
 		{
-			if (typeInfo.IsAssignableFrom(IntrospectionExtensions.GetTypeInfo(((object)element).GetType())))
+			if (typeInfo.IsAssignableFrom(IntrospectionExtensions.GetTypeInfo(element.GetType())))
 			{
 				return element;
 			}
@@ -24,11 +24,11 @@ internal static class ElementUtilities
 
 	internal static bool IsFullyWithinBoundsOf(UIElement descendant, UIElement ancestorBounds)
 	{
-		Windows.Foundation.Rect rect = new Windows.Foundation.Rect(new Windows.Foundation.Point(0.0, 0.0), descendant.RenderSize);
-		Windows.Foundation.Rect rect2 = new Windows.Foundation.Rect(new Windows.Foundation.Point(0.0, 0.0), ancestorBounds.RenderSize);
+        Rect rect = new(new Point(0.0, 0.0), descendant.RenderSize);
+        Rect rect2 = new(new Point(0.0, 0.0), ancestorBounds.RenderSize);
 		GeneralTransform generalTransform = descendant.TransformToVisual(ancestorBounds);
 		rect = generalTransform.TransformBounds(rect);
-		Windows.Foundation.Rect rect3 = rect2;
+        Rect rect3 = rect2;
 		rect3.Intersect(rect);
 		return rect3 == rect;
 	}

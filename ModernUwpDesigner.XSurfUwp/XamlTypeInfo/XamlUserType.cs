@@ -1,5 +1,3 @@
-#nullable disable
-
 using System;
 using System.Collections.Generic;
 using System.Runtime.CompilerServices;
@@ -84,7 +82,7 @@ internal partial class XamlUserType : XamlSystemBaseType
 		set;
 	}
 
-	public XamlUserType(XamlTypeInfoProvider provider, string fullName, System.Type fullType, IXamlType baseType)
+	public XamlUserType(XamlTypeInfoProvider provider, string fullName, Type fullType, IXamlType baseType)
 		: base(fullName, fullType)
 	{
 		_provider = provider;
@@ -123,7 +121,7 @@ internal partial class XamlUserType : XamlSystemBaseType
 	public override void RunInitializer()
 	{
 		//IL_0006: Unknown result type (might be due to invalid IL or missing references)
-		RuntimeHelpers.RunClassConstructor(base.UnderlyingType.TypeHandle);
+		RuntimeHelpers.RunClassConstructor(UnderlyingType.TypeHandle);
 	}
 
 	public override object CreateFromString(string input)
@@ -154,36 +152,29 @@ internal partial class XamlUserType : XamlSystemBaseType
 							num2 = Convert.ToInt32(text.Trim());
 						}
 						catch (FormatException)
-						{
-							var enumerator = _enumValues.Keys.GetEnumerator();
-							try
-							{
-								while (enumerator.MoveNext())
-								{
-									string current = enumerator.Current;
-									if (string.Compare(text.Trim(), current, (StringComparison)5) == 0 && _enumValues.TryGetValue(current.Trim(), out obj))
-									{
-										num2 = Convert.ToInt32(obj);
-										break;
-									}
-								}
-							}
-							finally
-							{
-								((System.IDisposable)enumerator/*cast due to .constrained prefix*/).Dispose();
-							}
-						}
-					}
+                        {
+                            using var enumerator = _enumValues.Keys.GetEnumerator();
+                            while (enumerator.MoveNext())
+                            {
+                                string current = enumerator.Current;
+                                if (string.Compare(text.Trim(), current, (StringComparison)5) == 0 && _enumValues.TryGetValue(current.Trim(), out obj))
+                                {
+                                    num2 = Convert.ToInt32(obj);
+                                    break;
+                                }
+                            }
+                        }
+                    }
 					num |= num2;
 				}
 				catch (FormatException)
 				{
-					throw new ArgumentException(input, base.FullName);
+					throw new ArgumentException(input, FullName);
 				}
 			}
 			return num;
 		}
-		throw new ArgumentException(input, base.FullName);
+		throw new ArgumentException(input, FullName);
 	}
 
 	public void SetContentPropertyName(string contentPropertyName)
@@ -232,7 +223,7 @@ internal partial class XamlUserType : XamlSystemBaseType
 		{
 			_memberNames = new Dictionary<string, string>();
 		}
-		_memberNames.Add(shortName, base.FullName + "." + shortName);
+		_memberNames.Add(shortName, FullName + "." + shortName);
 	}
 
 	public void AddEnumValue(string name, object value)

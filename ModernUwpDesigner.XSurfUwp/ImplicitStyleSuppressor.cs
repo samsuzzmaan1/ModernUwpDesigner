@@ -6,13 +6,13 @@ using WinRT;
 
 namespace XSurfUwp;
 
-public sealed partial class ImplicitStyleSuppressor : DependencyObject, System.IDisposable
+public sealed partial class ImplicitStyleSuppressor : DependencyObject, IDisposable
 {
 	private static readonly DependencyProperty styleSuppressorProperty = DependencyProperty.RegisterAttached("StyleSuppressor", typeof(ImplicitStyleSuppressor), typeof(ImplicitStyleSuppressor), new PropertyMetadata(null));
 
 	public static readonly DependencyProperty StyleSinkProperty = DependencyProperty.Register("StyleSink", typeof(Style), typeof(ImplicitStyleSuppressor), new PropertyMetadata(null, OnStyleChanged));
 
-	private FrameworkElement? element;
+	private FrameworkElement element;
 
 	private Style emptyStyle;
 
@@ -83,8 +83,8 @@ public sealed partial class ImplicitStyleSuppressor : DependencyObject, System.I
 		ignoreStyleChange = true;
 		try
 		{
-			object? obj = element?.ReadLocalValue(FrameworkElement.StyleProperty);
-			if (!(obj is Style))
+			object obj = element?.ReadLocalValue(FrameworkElement.StyleProperty);
+			if (obj is not Style)
 			{
 				element?.SetValue(FrameworkElement.StyleProperty, emptyStyle);
 			}
@@ -98,9 +98,6 @@ public sealed partial class ImplicitStyleSuppressor : DependencyObject, System.I
 	private static void OnStyleChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
 	{
 		ImplicitStyleSuppressor suppressor = (ImplicitStyleSuppressor)d;
-		suppressor?.element?.Dispatcher.TryRunAsync(CoreDispatcherPriority.Normal, delegate
-		{
-			suppressor.OnElementStyleChanged();
-		});
+        suppressor?.element?.Dispatcher.TryRunAsync(CoreDispatcherPriority.Normal, suppressor.OnElementStyleChanged);
 	}
 }

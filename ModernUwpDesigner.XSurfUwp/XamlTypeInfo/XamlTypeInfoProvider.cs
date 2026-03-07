@@ -1,5 +1,3 @@
-#nullable disable
-
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -17,15 +15,15 @@ internal class XamlTypeInfoProvider
 {
 	private Dictionary<string, IXamlType> _xamlTypeCacheByName = new Dictionary<string, IXamlType>();
 
-	private Dictionary<System.Type, IXamlType> _xamlTypeCacheByType = new Dictionary<System.Type, IXamlType>();
+	private Dictionary<Type, IXamlType> _xamlTypeCacheByType = new Dictionary<Type, IXamlType>();
 
 	private Dictionary<string, IXamlMember> _xamlMembers = new Dictionary<string, IXamlMember>();
 
 	private List<string> _typeNameTable;
 
-	private List<System.Type> _typeTable;
+	private List<Type> _typeTable;
 
-	public IXamlType GetXamlTypeByType(System.Type type)
+	public IXamlType GetXamlTypeByType(Type type)
 	{
 		IXamlType xamlType = default(IXamlType);
 		if (_xamlTypeCacheByType.TryGetValue(type, out xamlType))
@@ -90,8 +88,8 @@ internal class XamlTypeInfoProvider
 
 	private void InitTypeTables()
 	{
-		System.Type markupExtensionType = TypeHelper.GetMarkupExtensionType();
-		System.Type designInstanceType = TypeHelper.GetDesignInstanceType();
+        Type markupExtensionType = TypeHelper.GetMarkupExtensionType();
+        Type designInstanceType = TypeHelper.GetDesignInstanceType();
 		_typeNameTable = new List<string>();
 		_typeNameTable.Add("Windows.UI.Xaml.FrameworkElement");
 		_typeNameTable.Add("Windows.UI.Xaml.ResourceDictionary");
@@ -106,8 +104,8 @@ internal class XamlTypeInfoProvider
 		_typeNameTable.Add("String");
 		_typeNameTable.Add("Windows.UI.Xaml.Visibility");
 		_typeNameTable.Add("System.Type");
-		_typeNameTable.Add((markupExtensionType != (System.Type)null) ? "Windows.UI.Xaml.Markup.MarkupExtension" : string.Empty);
-		_typeNameTable.Add((designInstanceType != (System.Type)null) ? "XSurfUwp.DesignInstance" : string.Empty);
+		_typeNameTable.Add((markupExtensionType != null) ? "Windows.UI.Xaml.Markup.MarkupExtension" : string.Empty);
+		_typeNameTable.Add((designInstanceType != null) ? "XSurfUwp.DesignInstance" : string.Empty);
 		_typeNameTable.Add("XSurfUwp.Application");
 		_typeNameTable.Add("Windows.UI.Xaml.Controls.AppBar");
 		_typeNameTable.Add("XSurfUwp.ThreadLocalApp");
@@ -118,7 +116,7 @@ internal class XamlTypeInfoProvider
 		_typeNameTable.Add("XSurfUwp.Fallback.FallbackGroupStyleSelector");
 		_typeNameTable.Add("XSurfUwp.Fallback.FallbackStyleSelector");
 		_typeNameTable.Add("XSurfUwp.Fallback.LayoutFaultFallbackControl");
-		_typeTable = new List<System.Type>();
+		_typeTable = new List<Type>();
 		_typeTable.Add(typeof(FrameworkElement));
 		_typeTable.Add(typeof(ResourceDictionary));
 		_typeTable.Add(typeof(FallbackControl));
@@ -131,7 +129,7 @@ internal class XamlTypeInfoProvider
 		_typeTable.Add(typeof(int));
 		_typeTable.Add(typeof(string));
 		_typeTable.Add(typeof(Visibility));
-		_typeTable.Add(typeof(System.Type));
+		_typeTable.Add(typeof(Type));
 		_typeTable.Add(markupExtensionType);
 		_typeTable.Add(designInstanceType);
 		_typeTable.Add(typeof(Application));
@@ -160,7 +158,7 @@ internal class XamlTypeInfoProvider
 		return _typeNameTable.IndexOf(typeName);
 	}
 
-	private int LookupTypeIndexByType(System.Type type)
+	private int LookupTypeIndexByType(Type type)
 	{
 		EnsureTypeTables();
 		return _typeTable.IndexOf(type);
@@ -171,9 +169,9 @@ internal class XamlTypeInfoProvider
 		ResourceDictionary resources = Application.Current.Resources;
 		if (resources != null)
 		{
-			((System.Collections.Generic.ICollection<ResourceDictionary>)resources.MergedDictionaries).Clear();
-			((System.Collections.Generic.ICollection<KeyValuePair<object, object>>)resources.ThemeDictionaries).Clear();
-			((System.Collections.Generic.ICollection<KeyValuePair<object, object>>)resources).Clear();
+            resources.MergedDictionaries.Clear();
+            resources.ThemeDictionaries.Clear();
+			resources.Clear();
 		}
 		return Application.Current;
 	}
@@ -217,7 +215,7 @@ internal class XamlTypeInfoProvider
 	{
 		XamlSystemBaseType result = null;
 		string fullName = _typeNameTable[typeIndex];
-		System.Type type = _typeTable[typeIndex];
+        Type type = _typeTable[typeIndex];
 		switch (typeIndex)
 		{
 		case 0:
@@ -245,31 +243,27 @@ internal class XamlTypeInfoProvider
 			break;
 		}
 		case 4:
-		{
-			XamlUserType xamlUserType = new XamlUserType(this, fullName, type, GetXamlTypeByName("Object"));
-			System.Collections.Generic.IEnumerator<MethodInfo> enumerator = IntrospectionExtensions.GetTypeInfo(typeof(DT)).DeclaredMethods.GetEnumerator();
-			try
-			{
-				while (((System.Collections.IEnumerator)enumerator).MoveNext())
-				{
-					MethodInfo current = enumerator.Current;
-					if (((MethodBase)current).IsStatic && ((MemberInfo)current).Name.StartsWith("Get"))
-					{
-						xamlUserType.AddMemberName(((MemberInfo)current).Name.Substring("Get".Length));
-					}
-				}
-			}
-			finally
-			{
-				((System.IDisposable)enumerator)?.Dispose();
-			}
-			xamlUserType.AddMemberName("ResourceDictionarySource");
-			xamlUserType.AddMemberName("ShouldDisableImplicitStyle");
-			xamlUserType.SetIsLocalType();
-			result = xamlUserType;
-			break;
-		}
-		case 5:
+        {
+            XamlUserType xamlUserType = new XamlUserType(this, fullName, type, GetXamlTypeByName("Object"));
+            using (IEnumerator<MethodInfo> enumerator = IntrospectionExtensions.GetTypeInfo(typeof(DT)).DeclaredMethods.GetEnumerator())
+            {
+                while (enumerator.MoveNext())
+                {
+                    MethodInfo current = enumerator.Current;
+                    if (current.IsStatic && current.Name.StartsWith("Get"))
+                    {
+                        xamlUserType.AddMemberName(current.Name.Substring("Get".Length));
+                    }
+                }
+            }
+
+            xamlUserType.AddMemberName("ResourceDictionarySource");
+            xamlUserType.AddMemberName("ShouldDisableImplicitStyle");
+            xamlUserType.SetIsLocalType();
+            result = xamlUserType;
+            break;
+        }
+        case 5:
 		{
 			XamlUserType xamlUserType = new XamlUserType(this, fullName, type, GetXamlTypeByName("Object"));
 			xamlUserType.SetIsReturnTypeStub();
@@ -415,7 +409,7 @@ internal class XamlTypeInfoProvider
 			xamlMember.Getter = (object instance) => ((ThreadLocalApp)instance).DeviceSize;
 			xamlMember.Setter = delegate(object instance, object value)
 			{
-				((ThreadLocalApp)instance).DeviceSize = (Windows.Foundation.Size)value;
+				((ThreadLocalApp)instance).DeviceSize = (Size)value;
 			};
 		}
 		else
@@ -477,7 +471,7 @@ internal class XamlTypeInfoProvider
 		xamlMember = new XamlMember(this, "ShouldDisableImplicitStyle", "Boolean");
 		xamlMember.SetTargetTypeName("Windows.UI.Xaml.FrameworkElement");
 		xamlMember.SetIsAttachable();
-		xamlMember.Getter = (object instance) => (object)null;
+		xamlMember.Getter = (object instance) => null;
 		xamlMember.Setter = delegate(object instance, object value)
 		{
 			DT.SetShouldDisableImplicitStyle((FrameworkElement)instance, (bool)value);
@@ -504,17 +498,17 @@ internal class XamlTypeInfoProvider
 			string text = longMemberName.Substring("XSurfUwp.DT.".Length);
 			MethodInfo setter = IntrospectionExtensions.GetTypeInfo(typeof(DT)).GetDeclaredMethod("Set" + text);
 			MethodInfo getter = IntrospectionExtensions.GetTypeInfo(typeof(DT)).GetDeclaredMethod("Get" + text);
-			if (setter == (MethodInfo)null || getter == (MethodInfo)null || ((MethodBase)setter).GetParameters().Length != 2)
+			if (setter == null || getter == null || setter.GetParameters().Length != 2)
 			{
 				return null;
 			}
-			xamlMember = new XamlMember(this, text, GetWinrtProjectionName(((MethodBase)setter).GetParameters()[1].ParameterType));
+			xamlMember = new XamlMember(this, text, GetWinrtProjectionName(setter.GetParameters()[1].ParameterType));
 			xamlMember.SetTargetTypeName("Windows.UI.Xaml.DependencyObject");
 			xamlMember.SetIsAttachable();
-			xamlMember.Getter = (object instance) => ((MethodBase)getter).Invoke((object)null, new object[1] { instance });
+			xamlMember.Getter = (object instance) => getter.Invoke(null, new object[1] { instance });
 			xamlMember.Setter = delegate(object instance, object value)
 			{
-				((MethodBase)setter).Invoke((object)null, new object[2] { instance, value });
+                setter.Invoke(null, new object[2] { instance, value });
 			};
 		}
 		goto IL_0533;
@@ -526,7 +520,7 @@ internal class XamlTypeInfoProvider
 		xamlMember = new XamlMember(this, "ResourceDictionarySource", "String");
 		xamlMember.SetTargetTypeName("Windows.UI.Xaml.ResourceDictionary");
 		xamlMember.SetIsAttachable();
-		xamlMember.Getter = (object instance) => (object)null;
+		xamlMember.Getter = (object instance) => null;
 		xamlMember.Setter = delegate(object instance, object value)
 		{
 			DT.SetResourceDictionarySource((ResourceDictionary)instance, (string)value);
@@ -534,7 +528,7 @@ internal class XamlTypeInfoProvider
 		goto IL_0533;
 	}
 
-	private string GetWinrtProjectionName(System.Type type)
+	private string GetWinrtProjectionName(Type type)
 	{
 		string text = type.FullName;
 		if (type.IsNested)

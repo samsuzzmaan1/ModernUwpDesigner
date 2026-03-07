@@ -9,11 +9,11 @@ internal partial class XamlSystemBaseType : IXamlType
 {
 	private string _fullName;
 
-	private System.Type _underlyingType;
+	private Type _underlyingType;
 
 	public string FullName => _fullName;
 
-	public System.Type UnderlyingType => _underlyingType;
+	public Type UnderlyingType => _underlyingType;
 
 	public virtual IXamlType BaseType
 	{
@@ -123,7 +123,7 @@ internal partial class XamlSystemBaseType : IXamlType
 		}
 	}
 
-	public XamlSystemBaseType(string fullName, System.Type underlyingType)
+	public XamlSystemBaseType(string fullName, Type underlyingType)
 	{
 		_fullName = fullName;
 		_underlyingType = underlyingType;

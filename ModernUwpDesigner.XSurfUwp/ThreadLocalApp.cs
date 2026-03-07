@@ -5,13 +5,13 @@ namespace XSurfUwp;
 
 public partial class ThreadLocalApp : DependencyObject
 {
-	public static DependencyProperty DeviceSizeProperty = DependencyProperty.Register("DeviceSize", typeof(Windows.Foundation.Size), typeof(ThreadLocalApp), null);
+	public static DependencyProperty DeviceSizeProperty = DependencyProperty.Register("DeviceSize", typeof(Size), typeof(ThreadLocalApp), null);
 
-	public Windows.Foundation.Size DeviceSize
+	public Size DeviceSize
 	{
 		get
 		{
-			return (Windows.Foundation.Size)GetValue(DeviceSizeProperty);
+			return (Size)GetValue(DeviceSizeProperty);
 		}
 		set
 		{

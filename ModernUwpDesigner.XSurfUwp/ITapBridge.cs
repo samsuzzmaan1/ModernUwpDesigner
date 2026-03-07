@@ -8,9 +8,9 @@ using XSurfUwp;
 
 namespace XSurfUwp
 {
-    [global::WinRT.WindowsRuntimeType]
+    [WindowsRuntimeType]
     [Guid("59242773-1CA0-4254-8447-F462C161F839")]
-    [global::WinRT.WindowsRuntimeHelperType(typeof(ABI.XSurfUwp.ITapBridgeProjectedABI))]
+    [WindowsRuntimeHelperType(typeof(ABI.XSurfUwp.ITapBridgeProjectedABI))]
     public interface ITapBridge
     {
         void RegisterContent(object content);
@@ -51,13 +51,13 @@ namespace ABI.XSurfUwp
         {
             try
             {
-                global::WinRT.ComWrappersSupport.FindObject<ITapBridge>(thisPtr).RegisterContent(MarshalInspectable<object>.FromAbi(content));
+                ComWrappersSupport.FindObject<ITapBridge>(thisPtr).RegisterContent(MarshalInspectable<object>.FromAbi(content));
 
             }
             catch (Exception __exception__)
             {
-                global::WinRT.ExceptionHelpers.SetErrorInfo(__exception__);
-                return global::WinRT.ExceptionHelpers.GetHRForException(__exception__);
+                ExceptionHelpers.SetErrorInfo(__exception__);
+                return ExceptionHelpers.GetHRForException(__exception__);
             }
             return 0;
         }
@@ -66,33 +66,33 @@ namespace ABI.XSurfUwp
         {
             try
             {
-                global::WinRT.ComWrappersSupport.FindObject<ITapBridge>(thisPtr).ClearContent();
+                ComWrappersSupport.FindObject<ITapBridge>(thisPtr).ClearContent();
 
             }
             catch (Exception __exception__)
             {
-                global::WinRT.ExceptionHelpers.SetErrorInfo(__exception__);
-                return global::WinRT.ExceptionHelpers.GetHRForException(__exception__);
+                ExceptionHelpers.SetErrorInfo(__exception__);
+                return ExceptionHelpers.GetHRForException(__exception__);
             }
             return 0;
         }
         [UnmanagedCallersOnly(CallConvs = new[] { typeof(CallConvStdcall) })]
         private static unsafe int Do_Abi_GetHitTestRoot_2(IntPtr thisPtr, IntPtr* __returnValue)
         {
-            object? ____returnValue = default;
+            object ____returnValue = default;
 
             *__returnValue = default;
 
             try
             {
-                ____returnValue = global::WinRT.ComWrappersSupport.FindObject<ITapBridge>(thisPtr).GetHitTestRoot();
+                ____returnValue = ComWrappersSupport.FindObject<ITapBridge>(thisPtr).GetHitTestRoot();
                 *__returnValue = MarshalInspectable<object>.FromManaged(____returnValue);
 
             }
             catch (Exception __exception__)
             {
-                global::WinRT.ExceptionHelpers.SetErrorInfo(__exception__);
-                return global::WinRT.ExceptionHelpers.GetHRForException(__exception__);
+                ExceptionHelpers.SetErrorInfo(__exception__);
+                return ExceptionHelpers.GetHRForException(__exception__);
             }
             return 0;
         }
@@ -101,13 +101,13 @@ namespace ABI.XSurfUwp
         {
             try
             {
-                global::WinRT.ComWrappersSupport.FindObject<ITapBridge>(thisPtr).SetPanZoomTransform(scale, offsetX, offsetY);
+                ComWrappersSupport.FindObject<ITapBridge>(thisPtr).SetPanZoomTransform(scale, offsetX, offsetY);
 
             }
             catch (Exception __exception__)
             {
-                global::WinRT.ExceptionHelpers.SetErrorInfo(__exception__);
-                return global::WinRT.ExceptionHelpers.GetHRForException(__exception__);
+                ExceptionHelpers.SetErrorInfo(__exception__);
+                return ExceptionHelpers.GetHRForException(__exception__);
             }
             return 0;
         }
@@ -116,13 +116,13 @@ namespace ABI.XSurfUwp
         {
             try
             {
-                global::WinRT.ComWrappersSupport.FindObject<ITapBridge>(thisPtr).SetFlatBackground(new string((char*)backgroundColor));
+                ComWrappersSupport.FindObject<ITapBridge>(thisPtr).SetFlatBackground(new string((char*)backgroundColor));
 
             }
             catch (Exception __exception__)
             {
-                global::WinRT.ExceptionHelpers.SetErrorInfo(__exception__);
-                return global::WinRT.ExceptionHelpers.GetHRForException(__exception__);
+                ExceptionHelpers.SetErrorInfo(__exception__);
+                return ExceptionHelpers.GetHRForException(__exception__);
             }
             return 0;
         }
@@ -131,13 +131,13 @@ namespace ABI.XSurfUwp
         {
             try
             {
-                global::WinRT.ComWrappersSupport.FindObject<ITapBridge>(thisPtr).SetContentBorder(new string((char*)borderColor));
+                ComWrappersSupport.FindObject<ITapBridge>(thisPtr).SetContentBorder(new string((char*)borderColor));
 
             }
             catch (Exception __exception__)
             {
-                global::WinRT.ExceptionHelpers.SetErrorInfo(__exception__);
-                return global::WinRT.ExceptionHelpers.GetHRForException(__exception__);
+                ExceptionHelpers.SetErrorInfo(__exception__);
+                return ExceptionHelpers.GetHRForException(__exception__);
             }
             return 0;
         }
@@ -146,13 +146,13 @@ namespace ABI.XSurfUwp
         {
             try
             {
-                global::WinRT.ComWrappersSupport.FindObject<ITapBridge>(thisPtr).SetRootSize(MarshalInspectable<object>.FromAbi(obj), width, height);
+                ComWrappersSupport.FindObject<ITapBridge>(thisPtr).SetRootSize(MarshalInspectable<object>.FromAbi(obj), width, height);
 
             }
             catch (Exception __exception__)
             {
-                global::WinRT.ExceptionHelpers.SetErrorInfo(__exception__);
-                return global::WinRT.ExceptionHelpers.GetHRForException(__exception__);
+                ExceptionHelpers.SetErrorInfo(__exception__);
+                return ExceptionHelpers.GetHRForException(__exception__);
             }
             return 0;
         }
@@ -166,13 +166,13 @@ namespace ABI.XSurfUwp
             *value = default;
             *isValueType = default;
             *__returnValue = default;
-            string? __typeName = default;
-            string? __value = default;
+            string __typeName = default;
+            string __value = default;
             bool __isValueType = default;
 
             try
             {
-                ____returnValue = global::WinRT.ComWrappersSupport.FindObject<ITapBridge>(thisPtr).TrySerialize(MarshalInspectable<object>.FromAbi(obj), out __typeName, out __value, out __isValueType);
+                ____returnValue = ComWrappersSupport.FindObject<ITapBridge>(thisPtr).TrySerialize(MarshalInspectable<object>.FromAbi(obj), out __typeName, out __value, out __isValueType);
                 *typeName = MarshalString.FromManaged(__typeName);
                 *value = MarshalString.FromManaged(__value);
                 *isValueType = (byte)(__isValueType ? 1 : 0);
@@ -181,57 +181,57 @@ namespace ABI.XSurfUwp
             }
             catch (Exception __exception__)
             {
-                global::WinRT.ExceptionHelpers.SetErrorInfo(__exception__);
-                return global::WinRT.ExceptionHelpers.GetHRForException(__exception__);
+                ExceptionHelpers.SetErrorInfo(__exception__);
+                return ExceptionHelpers.GetHRForException(__exception__);
             }
             return 0;
         }
 
         unsafe void ITapBridge.RegisterContent(object content)
         {
-            var _obj = ((IObjectReference)((IWinRTObject)this).GetObjectReferenceForType(typeof(ITapBridge).TypeHandle));
+            var _obj = ((IWinRTObject)this).GetObjectReferenceForType(typeof(ITapBridge).TypeHandle);
             ITapBridgeMethods.RegisterContent(_obj, content);
         }
 
         unsafe void ITapBridge.ClearContent()
         {
-            var _obj = ((IObjectReference)((IWinRTObject)this).GetObjectReferenceForType(typeof(ITapBridge).TypeHandle));
+            var _obj = ((IWinRTObject)this).GetObjectReferenceForType(typeof(ITapBridge).TypeHandle);
             ITapBridgeMethods.ClearContent(_obj);
         }
 
         unsafe object ITapBridge.GetHitTestRoot()
         {
-            var _obj = ((IObjectReference)((IWinRTObject)this).GetObjectReferenceForType(typeof(ITapBridge).TypeHandle));
+            var _obj = ((IWinRTObject)this).GetObjectReferenceForType(typeof(ITapBridge).TypeHandle);
             return ITapBridgeMethods.GetHitTestRoot(_obj);
         }
 
         unsafe void ITapBridge.SetPanZoomTransform(double scale, double offsetX, double offsetY)
         {
-            var _obj = ((IObjectReference)((IWinRTObject)this).GetObjectReferenceForType(typeof(ITapBridge).TypeHandle));
+            var _obj = ((IWinRTObject)this).GetObjectReferenceForType(typeof(ITapBridge).TypeHandle);
             ITapBridgeMethods.SetPanZoomTransform(_obj, scale, offsetX, offsetY);
         }
 
         unsafe void ITapBridge.SetFlatBackground(string backgroundColor)
         {
-            var _obj = ((IObjectReference)((IWinRTObject)this).GetObjectReferenceForType(typeof(ITapBridge).TypeHandle));
+            var _obj = ((IWinRTObject)this).GetObjectReferenceForType(typeof(ITapBridge).TypeHandle);
             ITapBridgeMethods.SetFlatBackground(_obj, backgroundColor);
         }
 
         unsafe void ITapBridge.SetContentBorder(string borderColor)
         {
-            var _obj = ((IObjectReference)((IWinRTObject)this).GetObjectReferenceForType(typeof(ITapBridge).TypeHandle));
+            var _obj = ((IWinRTObject)this).GetObjectReferenceForType(typeof(ITapBridge).TypeHandle);
             ITapBridgeMethods.SetContentBorder(_obj, borderColor);
         }
 
         unsafe void ITapBridge.SetRootSize(object obj, double width, double height)
         {
-            var _obj = ((IObjectReference)((IWinRTObject)this).GetObjectReferenceForType(typeof(ITapBridge).TypeHandle));
+            var _obj = ((IWinRTObject)this).GetObjectReferenceForType(typeof(ITapBridge).TypeHandle);
             ITapBridgeMethods.SetRootSize(_obj, obj, width, height);
         }
 
         unsafe bool ITapBridge.TrySerialize(object obj, out string typeName, out string value, out bool isValueType)
         {
-            var _obj = ((IObjectReference)((IWinRTObject)this).GetObjectReferenceForType(typeof(ITapBridge).TypeHandle));
+            var _obj = ((IWinRTObject)this).GetObjectReferenceForType(typeof(ITapBridge).TypeHandle);
             return ITapBridgeMethods.TrySerialize(_obj, obj, out typeName, out value, out isValueType);
         }
     }
@@ -247,7 +247,7 @@ namespace ABI.XSurfUwp
             try
             {
                 __content = MarshalInspectable<object>.CreateMarshaler2(content);
-                global::WinRT.ExceptionHelpers.ThrowExceptionForHR((*(delegate* unmanaged[Stdcall]<IntPtr, IntPtr, int>**)ThisPtr)[6](ThisPtr, MarshalInspectable<object>.GetAbi(__content)));
+                ExceptionHelpers.ThrowExceptionForHR((*(delegate* unmanaged[Stdcall]<IntPtr, IntPtr, int>**)ThisPtr)[6](ThisPtr, MarshalInspectable<object>.GetAbi(__content)));
             }
             finally
             {
@@ -259,7 +259,7 @@ namespace ABI.XSurfUwp
         {
             var ThisPtr = _obj.ThisPtr;
 
-            global::WinRT.ExceptionHelpers.ThrowExceptionForHR((*(delegate* unmanaged[Stdcall]<IntPtr, int>**)ThisPtr)[7](ThisPtr));
+            ExceptionHelpers.ThrowExceptionForHR((*(delegate* unmanaged[Stdcall]<IntPtr, int>**)ThisPtr)[7](ThisPtr));
         }
 
         public static unsafe object GetHitTestRoot(IObjectReference _obj)
@@ -269,7 +269,7 @@ namespace ABI.XSurfUwp
             IntPtr __retval = default;
             try
             {
-                global::WinRT.ExceptionHelpers.ThrowExceptionForHR((*(delegate* unmanaged[Stdcall]<IntPtr, IntPtr*, int>**)ThisPtr)[8](ThisPtr, &__retval));
+                ExceptionHelpers.ThrowExceptionForHR((*(delegate* unmanaged[Stdcall]<IntPtr, IntPtr*, int>**)ThisPtr)[8](ThisPtr, &__retval));
                 return MarshalInspectable<object>.FromAbi(__retval);
             }
             finally
@@ -282,7 +282,7 @@ namespace ABI.XSurfUwp
         {
             var ThisPtr = _obj.ThisPtr;
 
-            global::WinRT.ExceptionHelpers.ThrowExceptionForHR((*(delegate* unmanaged[Stdcall]<IntPtr, double, double, double, int>**)ThisPtr)[9](ThisPtr, scale, offsetX, offsetY));
+            ExceptionHelpers.ThrowExceptionForHR((*(delegate* unmanaged[Stdcall]<IntPtr, double, double, double, int>**)ThisPtr)[9](ThisPtr, scale, offsetX, offsetY));
         }
 
         public static unsafe void SetFlatBackground(IObjectReference _obj, string backgroundColor)
@@ -290,7 +290,7 @@ namespace ABI.XSurfUwp
             var ThisPtr = _obj.ThisPtr;
 
             fixed (char* backgroundColorPtr = backgroundColor)
-                global::WinRT.ExceptionHelpers.ThrowExceptionForHR((*(delegate* unmanaged[Stdcall]<IntPtr, void*, int>**)ThisPtr)[10](ThisPtr, backgroundColorPtr));
+                ExceptionHelpers.ThrowExceptionForHR((*(delegate* unmanaged[Stdcall]<IntPtr, void*, int>**)ThisPtr)[10](ThisPtr, backgroundColorPtr));
         }
 
         public static unsafe void SetContentBorder(IObjectReference _obj, string borderColor)
@@ -298,7 +298,7 @@ namespace ABI.XSurfUwp
             var ThisPtr = _obj.ThisPtr;
 
             fixed (char* borderColorPtr = borderColor)
-                global::WinRT.ExceptionHelpers.ThrowExceptionForHR((*(delegate* unmanaged[Stdcall]<IntPtr, void*, int>**)ThisPtr)[11](ThisPtr, borderColorPtr));
+                ExceptionHelpers.ThrowExceptionForHR((*(delegate* unmanaged[Stdcall]<IntPtr, void*, int>**)ThisPtr)[11](ThisPtr, borderColorPtr));
         }
 
         public static unsafe void SetRootSize(IObjectReference _obj, object obj, double width, double height)
@@ -309,7 +309,7 @@ namespace ABI.XSurfUwp
             try
             {
                 __obj = MarshalInspectable<object>.CreateMarshaler2(obj);
-                global::WinRT.ExceptionHelpers.ThrowExceptionForHR((*(delegate* unmanaged[Stdcall]<IntPtr, IntPtr, double, double, int>**)ThisPtr)[12](ThisPtr, MarshalInspectable<object>.GetAbi(__obj), width, height));
+                ExceptionHelpers.ThrowExceptionForHR((*(delegate* unmanaged[Stdcall]<IntPtr, IntPtr, double, double, int>**)ThisPtr)[12](ThisPtr, MarshalInspectable<object>.GetAbi(__obj), width, height));
             }
             finally
             {
@@ -329,7 +329,7 @@ namespace ABI.XSurfUwp
             try
             {
                 __obj = MarshalInspectable<object>.CreateMarshaler2(obj);
-                global::WinRT.ExceptionHelpers.ThrowExceptionForHR((*(delegate* unmanaged[Stdcall]<IntPtr, IntPtr, IntPtr*, IntPtr*, byte*, byte*, int>**)ThisPtr)[13](ThisPtr, MarshalInspectable<object>.GetAbi(__obj), &__typeName, &__value, &__isValueType, &__retval));
+                ExceptionHelpers.ThrowExceptionForHR((*(delegate* unmanaged[Stdcall]<IntPtr, IntPtr, IntPtr*, IntPtr*, byte*, byte*, int>**)ThisPtr)[13](ThisPtr, MarshalInspectable<object>.GetAbi(__obj), &__typeName, &__value, &__isValueType, &__retval));
                 typeName = MarshalString.FromAbi(__typeName);
                 value = MarshalString.FromAbi(__value);
                 isValueType = __isValueType != 0;
@@ -344,17 +344,17 @@ namespace ABI.XSurfUwp
         }
 
 
-        public static ref readonly global::System.Guid IID
+        public static ref readonly Guid IID
         {
-            [global::System.Runtime.CompilerServices.MethodImpl(global::System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
+            [MethodImpl(MethodImplOptions.AggressiveInlining)]
             get
             {
-                global::System.ReadOnlySpan<byte> data = new byte[] { 0x73, 0x27, 0x24, 0x59, 0xA0, 0x1C, 0x54, 0x42, 0x84, 0x47, 0xF4, 0x62, 0xC1, 0x61, 0xF8, 0x39 };
-                return ref global::System.Runtime.CompilerServices.Unsafe.As<byte, global::System.Guid>(ref global::System.Runtime.InteropServices.MemoryMarshal.GetReference(data));
+                ReadOnlySpan<byte> data = new byte[] { 0x73, 0x27, 0x24, 0x59, 0xA0, 0x1C, 0x54, 0x42, 0x84, 0x47, 0xF4, 0x62, 0xC1, 0x61, 0xF8, 0x39 };
+                return ref Unsafe.As<byte, Guid>(ref MemoryMarshal.GetReference(data));
             }
         }
 
-        public static global::System.IntPtr AbiToProjectionVftablePtr => ABI.XSurfUwp.ITapBridgeProjectedABI.AbiToProjectionVftablePtr;
+        public static global::System.IntPtr AbiToProjectionVftablePtr => ITapBridgeProjectedABI.AbiToProjectionVftablePtr;
 
     }
 }

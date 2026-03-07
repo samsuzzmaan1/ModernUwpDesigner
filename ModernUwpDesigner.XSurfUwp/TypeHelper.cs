@@ -7,18 +7,18 @@ internal static class TypeHelper
 {
 	private class MarkupExtensionAccessor
 	{
-		public System.Type GetDesignInstanceType()
+		public Type GetDesignInstanceType()
 		{
 			return typeof(DesignInstance);
 		}
 
-		public System.Type GetMarkupExtensionType()
+		public Type GetMarkupExtensionType()
 		{
 			return typeof(MarkupExtension);
 		}
 	}
 
-	public static System.Type? GetDesignInstanceType()
+	public static Type GetDesignInstanceType()
 	{
 		try
 		{
@@ -26,11 +26,13 @@ internal static class TypeHelper
 		}
 		catch (TypeLoadException)
 		{
+
 		}
+
 		return null;
 	}
 
-	public static System.Type? GetMarkupExtensionType()
+	public static Type GetMarkupExtensionType()
 	{
 		try
 		{
@@ -38,7 +40,9 @@ internal static class TypeHelper
 		}
 		catch (TypeLoadException)
 		{
+
 		}
+
 		return null;
 	}
 }

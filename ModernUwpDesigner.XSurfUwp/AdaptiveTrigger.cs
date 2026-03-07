@@ -10,7 +10,7 @@ public partial class AdaptiveTrigger : StateTriggerBase
 
 	public static DependencyProperty MinWindowHeightProperty = DependencyProperty.Register("MinWindowHeight", typeof(double), typeof(AdaptiveTrigger), new PropertyMetadata(-1.0, OnPropertyChanged));
 
-	public static DependencyProperty DeviceSizeProperty = DependencyProperty.Register("DeviceSize", typeof(Windows.Foundation.Size), typeof(AdaptiveTrigger), new PropertyMetadata(new Windows.Foundation.Size(0.0, 0.0), OnPropertyChanged));
+	public static DependencyProperty DeviceSizeProperty = DependencyProperty.Register("DeviceSize", typeof(Size), typeof(AdaptiveTrigger), new PropertyMetadata(new Size(0.0, 0.0), OnPropertyChanged));
 
 	public double MinWindowWidth
 	{
@@ -36,11 +36,11 @@ public partial class AdaptiveTrigger : StateTriggerBase
 		}
 	}
 
-	public Windows.Foundation.Size DeviceSize
+	public Size DeviceSize
 	{
 		get
 		{
-			return (Windows.Foundation.Size)GetValue(DeviceSizeProperty);
+			return (Size)GetValue(DeviceSizeProperty);
 		}
 		set
 		{
@@ -50,7 +50,7 @@ public partial class AdaptiveTrigger : StateTriggerBase
 
 	public AdaptiveTrigger()
 	{
-		Binding binding = new Binding
+		Binding binding = new()
 		{
 			Mode = BindingMode.OneWay,
 			Source = Application.Current.Local,
@@ -66,7 +66,7 @@ public partial class AdaptiveTrigger : StateTriggerBase
 
 	private void UpdateActive()
 	{
-		Windows.Foundation.Size deviceSize = DeviceSize;
+        Size deviceSize = DeviceSize;
 		bool active = (MinWindowWidth >= 0.0 && deviceSize.Width >= MinWindowWidth) || (MinWindowHeight >= 0.0 && deviceSize.Height >= MinWindowHeight);
 		SetActive(active);
 	}

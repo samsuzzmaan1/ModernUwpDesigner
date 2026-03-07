@@ -30,11 +30,11 @@ internal static class NativeMethods
 
 	public const uint COWAIT_ENABLECALLREENTRANCY = 8u;
 
-	public static readonly global::System.IntPtr HWND_TOP = new(0);
+	public static readonly nint HWND_TOP = new(0);
 
 	[DllImport("user32.dll", SetLastError = true)]
 	[return: MarshalAs((UnmanagedType)2)]
-	public static extern bool SetProcessDpiAwarenessContext(global::System.IntPtr dpiContext);
+	public static extern bool SetProcessDpiAwarenessContext(nint dpiContext);
 
 	[DllImport("shcore.dll")]
 	public static extern int SetProcessDpiAwareness(PROCESS_DPI_AWARENESS value);
@@ -45,8 +45,8 @@ internal static class NativeMethods
 
 	[DllImport("user32.dll", SetLastError = true)]
 	[return: MarshalAs((UnmanagedType)2)]
-	public static extern bool SetWindowPos(global::System.IntPtr hWnd, global::System.IntPtr hWndInsertAfter, int X, int Y, int cx, int cy, uint uFlags);
+	public static extern bool SetWindowPos(nint hWnd, nint hWndInsertAfter, int X, int Y, int cx, int cy, uint uFlags);
 
 	[DllImport("User32")]
-	public static extern global::System.IntPtr SetParent(global::System.IntPtr hWnd, global::System.IntPtr hWndParent);
+	public static extern nint SetParent(nint hWnd, nint hWndParent);
 }

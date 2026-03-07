@@ -5,7 +5,7 @@ namespace XSurfUwp;
 public static class ProjectInfo
 {
 	[field: CompilerGenerated]
-	public static string? InfoStore
+	public static string InfoStore
 	{
 		[CompilerGenerated]
 		get;
