@@ -77,8 +77,8 @@ public static class DT
 	public static readonly DependencyProperty RuntimeIsZoomedInViewActiveProperty = DependencyProperty.RegisterAttached("RuntimeIsZoomedInViewActive", typeof(bool), typeof(DT), new PropertyMetadata(true));
 
 	[DllImport("Microsoft.VisualStudio.DesignTools.UwpTap.dll")]
-	[return: MarshalAs((UnmanagedType)45)]
-	public static extern int UpdateResourceDictionarySource([MarshalAs((UnmanagedType)46)] object dependencyObject, [MarshalAs((UnmanagedType)21)] string newSource);
+	[return: MarshalAs(UnmanagedType.Error)]
+	public static extern int UpdateResourceDictionarySource(nint dependencyObject, [MarshalAs(UnmanagedType.LPWStr)] string newSource);
 
 	public static void SetRootWidth(DependencyObject dependencyObject, double value)
 	{
@@ -374,7 +374,7 @@ public static class DT
 
 	public static void SetResourceDictionarySource(ResourceDictionary resourceDictionary, string value)
 	{
-		int num = UpdateResourceDictionarySource(resourceDictionary, value);
+		int num = UpdateResourceDictionarySource(((IWinRTObject)resourceDictionary).NativeObject.ThisPtr, value);
 		if (num != 0)
 		{
 			System.Exception? exceptionForHR = Marshal.GetExceptionForHR(num);
