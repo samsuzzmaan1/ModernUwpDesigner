@@ -70,12 +70,12 @@ public class UwpHostPlatform : HostPlatformBase
 		errorSummary = string.Empty;
 		errorDetails = string.Empty;
 
-		if (hostProject?.GetProperty("SkipXamlDesignerSdkCheck")?.Equals("true", StringComparison.OrdinalIgnoreCase) is true)
+		if (hostProject?.GetPropertyCompat("SkipXamlDesignerSdkCheck")?.Equals("true", StringComparison.OrdinalIgnoreCase) is true)
 		{
 			return true;
         }
 
-        string text = hostProject?.GetProperty("TargetPlatformSdkRootOverride");
+		string text = hostProject?.GetPropertyCompat("TargetPlatformSdkRootOverride");
 		if (!string.IsNullOrEmpty(text))
 		{
 			errorSummary = StringTable.CompatibleRuntimeCustomSdkSummary;
@@ -128,7 +128,7 @@ public class UwpHostPlatform : HostPlatformBase
 		if (sdkReferences == null && hostProject is IHostDesignerProject hostDesignerProject)
 		{
 			List<IHostSdkReference> list = new List<IHostSdkReference>();
-			string property = hostProject.GetProperty("EnableAppLocalVCLibs");
+			string property = hostProject.GetPropertyCompat("EnableAppLocalVCLibs");
 			if (!string.Equals(property, "true", StringComparison.OrdinalIgnoreCase))
 			{
 				IHostSdkReference hostSdkReference = hostDesignerProject.ResolveSdkReference("Microsoft.VCLibs, Version=14.0");
