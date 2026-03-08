@@ -155,16 +155,24 @@
       <HintPath>$(VsInstallRoot)\Common7\IDE\PrivateAssemblies\Microsoft.VisualStudio.DesignTools.Utility.dll</HintPath>
       <SpecificVersion>False</SpecificVersion>
     </Reference>
-	 <Reference Include="Microsoft.VisualStudio.DesignTools.DesignerContract">
+	<Reference Include="Microsoft.VisualStudio.DesignTools.DesignerContract">
+      <Private>false</Private>
+      <SpecificVersion>False</SpecificVersion>
       <HintPath>$(VsInstallRoot)\Common7\IDE\PrivateAssemblies\Microsoft.VisualStudio.DesignTools.DesignerContract.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.VisualStudio.DesignTools.DesignerContractBase">
+      <Private>false</Private>
+      <SpecificVersion>False</SpecificVersion>
       <HintPath>$(VsInstallRoot)\Common7\IDE\PrivateAssemblies\Microsoft.VisualStudio.DesignTools.DesignerContractBase.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.VisualStudio.DesignTools.UwpSurfaceDesigner">
+      <Private>false</Private>
+      <SpecificVersion>False</SpecificVersion>
       <HintPath>$(VsInstallRoot)\Common7\IDE\PrivateAssemblies\Microsoft.VisualStudio.DesignTools.UwpSurfaceDesigner.dll</HintPath>
     </Reference>
 	<Reference Include="Microsoft.VisualStudio.DesignTools.SurfaceDesigner">
+      <Private>false</Private>
+      <SpecificVersion>False</SpecificVersion>
       <HintPath>$(VsInstallRoot)\Common7\IDE\PrivateAssemblies\Microsoft.VisualStudio.DesignTools.SurfaceDesigner.dll</HintPath>
     </Reference>
   </ItemGroup>
