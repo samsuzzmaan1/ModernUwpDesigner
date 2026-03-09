@@ -116,6 +116,9 @@
   </ItemGroup>
   <ItemGroup>
     <!--PackageReference Include="Microsoft.VisualStudio.SDK" Version="17.0.32112.339" ExcludeAssets="runtime" NoWarn="NU1604" /-->
+    <PackageReference Include="MonoMod.RuntimeDetour">
+      <Version>25.3.4</Version>
+    </PackageReference>
     <Reference Include="Microsoft.VisualStudio.Shell">
       <Private>false</Private>
       <HintPath>$(VsInstallRoot)\Common7\IDE\PublicAssemblies\Microsoft.VisualStudio.Shell.15.0.dll</HintPath>
@@ -151,6 +154,26 @@
       <Private>false</Private>
       <HintPath>$(VsInstallRoot)\Common7\IDE\PrivateAssemblies\Microsoft.VisualStudio.DesignTools.Utility.dll</HintPath>
       <SpecificVersion>False</SpecificVersion>
+    </Reference>
+	<Reference Include="Microsoft.VisualStudio.DesignTools.DesignerContract">
+      <Private>false</Private>
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>$(VsInstallRoot)\Common7\IDE\PrivateAssemblies\Microsoft.VisualStudio.DesignTools.DesignerContract.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.VisualStudio.DesignTools.DesignerContractBase">
+      <Private>false</Private>
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>$(VsInstallRoot)\Common7\IDE\PrivateAssemblies\Microsoft.VisualStudio.DesignTools.DesignerContractBase.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.VisualStudio.DesignTools.UwpSurfaceDesigner">
+      <Private>false</Private>
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>$(VsInstallRoot)\Common7\IDE\PrivateAssemblies\Microsoft.VisualStudio.DesignTools.UwpSurfaceDesigner.dll</HintPath>
+    </Reference>
+	<Reference Include="Microsoft.VisualStudio.DesignTools.SurfaceDesigner">
+      <Private>false</Private>
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>$(VsInstallRoot)\Common7\IDE\PrivateAssemblies\Microsoft.VisualStudio.DesignTools.SurfaceDesigner.dll</HintPath>
     </Reference>
   </ItemGroup>
   <ItemGroup>
