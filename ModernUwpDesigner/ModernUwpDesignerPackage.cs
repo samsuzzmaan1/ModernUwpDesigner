@@ -72,7 +72,7 @@ namespace ModernUwpDesigner
                     { "HostPlatformType", "Microsoft.VisualStudio.DesignTools.UwpDesignerHost.UwpHostPlatform" },
                     { "IsolationUnification", "true" },
                     { "ReferenceAssemblyMode", "None" },
-                    { "DefaultTargetFramework", ".NETCore, Version=9.0" },
+                    { "DefaultTargetFramework", ".NETCore, Version=10.0" },
                     { "UserControlTemplateName", "MyUserControl.xaml" },
                     { "PlatformSurfaceIsolatedGuid", "{D617FC9B-7AE9-4219-B022-359A3D13B875}" },
                     { "SupportsToolboxAutoPopulation", "true" },
