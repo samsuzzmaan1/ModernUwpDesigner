@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <PackageManifest Version="2.0.0" xmlns="http://schemas.microsoft.com/developer/vsx-schema/2011" xmlns:d="http://schemas.microsoft.com/developer/vsx-schema-design/2011">
     <Metadata>
-        <Identity Id="ModernUwpDesigner.5fd8081f-8018-4306-b04a-3df569e8e18d" Version="1.1" Language="en-US" Publisher="Ahmed Walid" />
+        <Identity Id="ModernUwpDesigner.5fd8081f-8018-4306-b04a-3df569e8e18d" Version="1.2" Language="en-US" Publisher="Ahmed Walid" />
         <DisplayName>Modern UWP Designer</DisplayName>
         <Description xml:space="preserve">Provides XAML Designer support for Modern UWP .NET 9+ projects</Description>
         <License>LICENSE.txt</License>
-        <GettingStartedGuide>Usage Guide.txt</GettingStartedGuide>
-        <ReleaseNotes>Release Notes.txt</ReleaseNotes>
+        <GettingStartedGuide>UsageGuide.txt</GettingStartedGuide>
+        <ReleaseNotes>ReleaseNotes.txt</ReleaseNotes>
         <Tags>XAML, UWP, WinRT, Designer</Tags>
         <Preview>true</Preview>
     </Metadata>

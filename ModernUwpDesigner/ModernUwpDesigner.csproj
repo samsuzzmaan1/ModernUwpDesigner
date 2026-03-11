@@ -155,7 +155,7 @@
       <HintPath>$(VsInstallRoot)\Common7\IDE\PrivateAssemblies\Microsoft.VisualStudio.DesignTools.Utility.dll</HintPath>
       <SpecificVersion>False</SpecificVersion>
     </Reference>
-	<Reference Include="Microsoft.VisualStudio.DesignTools.DesignerContract">
+    <Reference Include="Microsoft.VisualStudio.DesignTools.DesignerContract">
       <Private>false</Private>
       <SpecificVersion>False</SpecificVersion>
       <HintPath>$(VsInstallRoot)\Common7\IDE\PrivateAssemblies\Microsoft.VisualStudio.DesignTools.DesignerContract.dll</HintPath>
@@ -170,7 +170,7 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>$(VsInstallRoot)\Common7\IDE\PrivateAssemblies\Microsoft.VisualStudio.DesignTools.UwpSurfaceDesigner.dll</HintPath>
     </Reference>
-	<Reference Include="Microsoft.VisualStudio.DesignTools.SurfaceDesigner">
+    <Reference Include="Microsoft.VisualStudio.DesignTools.SurfaceDesigner">
       <Private>false</Private>
       <SpecificVersion>False</SpecificVersion>
       <HintPath>$(VsInstallRoot)\Common7\IDE\PrivateAssemblies\Microsoft.VisualStudio.DesignTools.SurfaceDesigner.dll</HintPath>
@@ -356,15 +356,21 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
       <IncludeInVSIX>true</IncludeInVSIX>
     </Content>
-    <Content Include="Usage Guide.txt">
+    <Content Include="UsageGuide.txt">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
       <IncludeInVSIX>true</IncludeInVSIX>
     </Content>
-    <Content Include="LICENSE.txt">
+    <Content Include="ReleaseNotes.txt">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
       <IncludeInVSIX>true</IncludeInVSIX>
     </Content>
-    <Content Include="Release Notes.txt">
+    <Content Include="..\LICENSE.txt">
+      <Link>LICENSE.txt</Link>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      <IncludeInVSIX>true</IncludeInVSIX>
+    </Content>
+    <Content Include="..\NOTICE.txt">
+      <Link>NOTICE.txt</Link>
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
       <IncludeInVSIX>true</IncludeInVSIX>
     </Content>

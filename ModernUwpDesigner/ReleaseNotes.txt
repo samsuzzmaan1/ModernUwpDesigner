@@ -1,0 +1,18 @@
+﻿--- Version 1.2 ---
+
+- Added support for using the designer on ARM64 project build platform (active solution platform) natively/directly without the need to switch to x64 or x86 platforms
+- Fixed an issue where the designer would ignore App.xaml resources
+- Fixed an issue where embedded resources (resources.pri) changes wouldn't be picked up by the designer on regular build, requiring a full project rebuild
+- Fixed a designer crash that occasionally happened with projects that consume WinUI 2
+- Fixed a designer crash caused by designer not always properly importing the application's resources.pri file
+- Fixed a designer crash on project rebuild
+- Various stability improvements and bug fixes, the designer should be much more stable and reliable now
+
+--- Version 1.1 ---
+
+- Fixed Visual Studio 2026 compatibility issues
+- Fixed ResourceDictionary support
+
+--- Version 1.0 ---
+
+- Initial release

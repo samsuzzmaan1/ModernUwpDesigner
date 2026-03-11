@@ -19,5 +19,6 @@ Modern UWP Designer is a Visual Studio extension that adds XAML Designer support
 ### New Features
 
 - `<SkipXamlDesignerSdkCheck>true</SkipXamlDesignerSdkCheck>` MSBuild property to skip the OS build check for the designer, allowing it to be used on older OS builds than the project SDK version
+- Support for using the designer on ARM64 project build platform (active solution platform) natively/directly without the need to switch to x64 or x86 platforms
 
 <img alt="image" src="https://github.com/user-attachments/assets/d99f9e55-aa38-4128-8657-d6e4d04fe517" />
