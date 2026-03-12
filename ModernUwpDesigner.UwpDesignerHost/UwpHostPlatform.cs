@@ -4,6 +4,7 @@ using Microsoft.VisualStudio.DesignTools.DesignerContract;
 using Microsoft.VisualStudio.DesignTools.DesignerHost.HostServices;
 using Microsoft.VisualStudio.DesignTools.DesignerHost.ShadowCopy;
 using Microsoft.VisualStudio.DesignTools.DesignerHost.Utility;
+using Microsoft.VisualStudio.DesignTools.Markup.Metadata;
 using Microsoft.VisualStudio.DesignTools.Markup.XmlModify;
 using Microsoft.VisualStudio.DesignTools.Utility;
 using Microsoft.VisualStudio.DesignTools.Utility.Diagnostics;
@@ -40,6 +41,13 @@ public class UwpHostPlatform : HostPlatformBase
 	public override IUriResolver UriResolver => UwpUriResolver.Instance;
 
 	internal static IServiceProvider ServiceProvider { get; private set; }
+
+    // Custom DesignTime properties
+
+    // DesignTimePropertyId Register(string propertyName, ITypeId valueTypeId, string defaultValue, ITypeId targetTypeId)
+	private static readonly unsafe delegate*<string, ITypeId, string, ITypeId, DesignTimePropertyId> RegisterDesignTimeProperty = (delegate*<string, ITypeId, string, ITypeId, DesignTimePropertyId>)typeof(XamlDesignTimeProperties).GetMethod("Register", BindingFlags.NonPublic | BindingFlags.Static, null, [typeof(string), typeof(ITypeId), typeof(string), typeof(ITypeId)], null).MethodHandle.GetFunctionPointer();
+
+    public static readonly unsafe IPropertyId InvertColorsProperty = RegisterDesignTimeProperty("InvertColors", PlatformTypes.Boolean, "false", XamlTypes.UIElement);
 
     public UwpHostPlatform(IServiceProvider serviceProvider, PlatformIdentifier platformIdentifier)
 		: this(serviceProvider, platformIdentifier, null)
