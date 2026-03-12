@@ -129,6 +129,11 @@
       <HintPath>$(VsInstallRoot)\Common7\IDE\PublicAssemblies\Microsoft.VisualStudio.Shell.Interop.dll</HintPath>
       <SpecificVersion>False</SpecificVersion>
     </Reference>
+	<Reference Include="Microsoft.VisualStudio.Interop">
+      <Private>false</Private>
+      <HintPath>$(VsInstallRoot)\Common7\IDE\PublicAssemblies\Microsoft.VisualStudio.Interop.dll</HintPath>
+      <SpecificVersion>False</SpecificVersion>
+    </Reference>
     <Reference Include="Microsoft.VisualStudio.Shell.Framework">
       <Private>false</Private>
       <HintPath>$(VsInstallRoot)\Common7\IDE\PublicAssemblies\Microsoft.VisualStudio.Shell.Framework.dll</HintPath>
@@ -174,6 +179,11 @@
       <Private>false</Private>
       <SpecificVersion>False</SpecificVersion>
       <HintPath>$(VsInstallRoot)\Common7\IDE\PrivateAssemblies\Microsoft.VisualStudio.DesignTools.SurfaceDesigner.dll</HintPath>
+    </Reference>
+	<Reference Include="Microsoft.VisualStudio.DesignTools.XamlDesignerHost">
+      <Private>false</Private>
+      <HintPath>$(VsInstallRoot)\Common7\IDE\PrivateAssemblies\Microsoft.VisualStudio.DesignTools.XamlDesignerHost.dll</HintPath>
+      <SpecificVersion>False</SpecificVersion>
     </Reference>
   </ItemGroup>
   <ItemGroup>

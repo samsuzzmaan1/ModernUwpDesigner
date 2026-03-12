@@ -14,11 +14,11 @@ internal class WindowsMetadataHelper
 	{
         //WindowsMetaDataLocation = Path.Combine(EnvironmentHelper.GetRuntimeWinmdLocation(platformIdentifier.GetTargetSdk(), platformIdentifier.GetTargetPlatform()), "Windows.winmd");
 
-        // HACK: FIX ME
+        // HACK: FIX ME, Update: hack's reason got "fixed" but keeping it just in case
 
         var identifier = platformIdentifier;
         if (identifier.TargetPlatformIdentifier != PlatformNames.UAP)
-            identifier = new PlatformIdentifier(new PlatformName(PlatformNames.UAP, platformIdentifier.TargetPlatformVersion), platformIdentifier.TargetRuntime, platformIdentifier.GetTargetFramework(), platformIdentifier.GetTargetSdk(), XamlRuntimeNames.UAP);
+            identifier = new PlatformIdentifier(new PlatformName(PlatformNames.UAP, platformIdentifier.TargetPlatformVersion, platformIdentifier.TargetPlatformMinVersion), platformIdentifier.TargetRuntime, platformIdentifier.GetTargetFramework(), platformIdentifier.GetTargetSdk(), XamlRuntimeNames.UAP);
 
         this.WindowsMetaDataLocation = Path.Combine(EnvironmentHelper.GetRuntimeWinmdLocation(identifier.GetTargetSdk(), identifier.GetTargetPlatform()), "Windows.winmd");
     }

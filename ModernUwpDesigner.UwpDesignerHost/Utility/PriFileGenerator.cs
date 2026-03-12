@@ -41,11 +41,11 @@ internal class PriFileGenerator : IPriFileGenerator
 		//targetSdk = platformIdentifier.GetTargetSdk();
 		this.surfaceProcessInfo = surfaceProcessInfo;
 
-		// HACK: FIX ME
+        // HACK: FIX ME, Update: hack's reason got "fixed" but keeping it just in case
 
         var identifier = platformIdentifier;
         if (identifier.TargetPlatformIdentifier != PlatformNames.UAP)
-            identifier = new PlatformIdentifier(new PlatformName(PlatformNames.UAP, platformIdentifier.TargetPlatformVersion), platformIdentifier.TargetRuntime, platformIdentifier.GetTargetFramework(), platformIdentifier.GetTargetSdk(), XamlRuntimeNames.UAP);
+            identifier = new PlatformIdentifier(new PlatformName(PlatformNames.UAP, platformIdentifier.TargetPlatformVersion, platformIdentifier.TargetPlatformMinVersion), platformIdentifier.TargetRuntime, platformIdentifier.GetTargetFramework(), platformIdentifier.GetTargetSdk(), XamlRuntimeNames.UAP);
 
         this.targetPlatform = identifier.GetTargetPlatform();
         this.targetSdk = identifier.GetTargetSdk();

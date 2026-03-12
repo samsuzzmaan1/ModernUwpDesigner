@@ -497,7 +497,9 @@ public sealed partial class DT
                     if (value)
                     {
                         using var effectFactory = layerVisual.Compositor.CreateEffectFactory(new InvertEffect());
+                        var effect = layerVisual.Effect;
                         layerVisual.Effect = effectFactory.CreateBrush();
+                        effect?.Dispose();
                     }
                     else
                     {
@@ -517,7 +519,7 @@ public sealed partial class DT
         {
             var compositor = ElementCompositionPreview.GetElementVisual(element).Compositor;
             var spriteVisual = compositor.CreateSpriteVisual();
-            spriteVisual.Comment = "XSurfUwp.InvertColorsVisual";
+            spriteVisual.Comment = Constants.InvertColorsVisualComment;
             spriteVisual.RelativeSizeAdjustment = Vector2.One;
 
             var effect = new InvertEffect()
@@ -547,8 +549,21 @@ public sealed partial class DT
 
             spriteVisual.Brush = brush;
 
+            if (childVisual?.Comment is Constants.InvertColorsVisualComment)
+            {
+                ElementCompositionPreview.SetElementChildVisual(element, null);
+                childVisual.Dispose();
+                childVisual = null;
+            }
+
             if (childVisual is ContainerVisual childContainer)
             {
+                if (GetInvertColorsVisual(d) is SpriteVisual childInvertVisual)
+                {
+                    childContainer.Children.Remove(childInvertVisual);
+                    childInvertVisual.Dispose();
+                }
+
                 childContainer.Children.InsertAtTop(spriteVisual);
                 SetInvertColorsVisual(d, spriteVisual);
             }
@@ -571,7 +586,7 @@ public sealed partial class DT
         {
             if (childVisual is ContainerVisual childContainer)
             {
-                if (childContainer.Comment == "XSurfUwp.InvertColorsVisual")
+                if (childContainer.Comment is Constants.InvertColorsVisualComment)
                 {
                     ElementCompositionPreview.SetElementChildVisual(element, null);
                     childContainer.Dispose();

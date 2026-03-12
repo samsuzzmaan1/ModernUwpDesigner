@@ -1,20 +1,26 @@
 ﻿using Microsoft.VisualStudio;
 using Microsoft.VisualStudio.DesignTools.DesignerContract;
+using Microsoft.VisualStudio.DesignTools.DesignerHost;
 using Microsoft.VisualStudio.DesignTools.DesignerHost.HostServices;
 using Microsoft.VisualStudio.DesignTools.DesignerHost.Platform;
 using Microsoft.VisualStudio.DesignTools.SurfaceDesigner.Documents.Project;
 using Microsoft.VisualStudio.DesignTools.SurfaceDesigner.Views;
 using Microsoft.VisualStudio.DesignTools.Utility;
+using Microsoft.VisualStudio.DesignTools.Utility.Extensions;
 using Microsoft.VisualStudio.DesignTools.UwpDesignerHost;
 using Microsoft.VisualStudio.DesignTools.UwpSurfaceDesigner.Documents;
 using Microsoft.VisualStudio.DesignTools.UwpSurfaceDesigner.Views;
+using Microsoft.VisualStudio.DesignTools.XamlDesignerHost.DesignSurface;
 using Microsoft.VisualStudio.Shell;
 using Microsoft.VisualStudio.Shell.Interop;
 using MonoMod.RuntimeDetour;
 using System;
 using System.Collections.Generic;
 using System.Reflection;
+using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
+using System.Runtime.Serialization;
+using System.Runtime.Versioning;
 using System.Threading;
 using Task = System.Threading.Tasks.Task;
 
@@ -52,8 +58,17 @@ namespace ModernUwpDesigner
 
         private static Hook _updateRuntimeArchitectureHook;
         private static Hook _incompatibleDesignerRuntimeArchitectureHook;
+        private static Hook _getTargetPlatformFromProjectStorageHook;
+        //private static Hook _isValidToolboxItemSourceHook;
+        //private static Hook _createToolboxItemDataHook;
+        //private static Hook _provideToolboxItemDiscoveryAttributeCctorHook;
+        //private static Hook _uwpToolboxMultiTargetingProviderCctorHook;
 
-        private static readonly PlatformSpecification ModernUwpSpecification = new("Windows", "10.0-..", ["Managed", "Native"], ".NETCoreApp", "10.0-..", null, "UAP", null);
+        //private static unsafe delegate*<object, IDictionary<string, string>> GetResolutionMap;
+        //private static unsafe delegate*<object, bool, string, string, IEnumerable<PlatformName>, object> ToolboxItemDataCctor;
+
+        //private static readonly PlatformSpecification ModernUwpSpecificationWindows = new("Windows", "10.0-..", ["Managed", "Native"], ".NETCoreApp", "10.0-..", null, "UAP", null);
+        private static readonly PlatformSpecification ModernUwpSpecificationUap = new("UAP", "10.0-..", ["Managed", "Native"], ".NETCoreApp", "10.0-..", null, "UAP", null);
 
         protected override async Task InitializeAsync(CancellationToken cancellationToken, IProgress<ServiceProgressData> progress)
         {
@@ -62,9 +77,8 @@ namespace ModernUwpDesigner
 
             unsafe
             {
-
                 var RegisterPlatformConfiguration = (delegate*<PlatformSpecification, IDictionary<string, string>, void>)typeof(PlatformConfigurationService).GetMethod("RegisterPlatformConfiguration", BindingFlags.NonPublic | BindingFlags.Static).MethodHandle.GetFunctionPointer();
-                RegisterPlatformConfiguration(ModernUwpSpecification, new Dictionary<string, string>
+                RegisterPlatformConfiguration(ModernUwpSpecificationUap, new Dictionary<string, string>
                 {
                     { "PlatformCreatorAssembly", "Microsoft.VisualStudio.DesignTools.UwpSurfaceDesigner" },
                     { "PlatformCreatorType", "Microsoft.VisualStudio.DesignTools.UwpSurfaceDesigner.UwpPlatformCreator" },
@@ -95,6 +109,48 @@ namespace ModernUwpDesigner
                 var method = typeof(HostPlatformBase).GetMethod("UpdateRuntimeArchitecture", BindingFlags.NonPublic | BindingFlags.Instance);
                 _updateRuntimeArchitectureHook = new Hook(method, UpdateRuntimeArchitectureHook);
             }
+
+            if (_getTargetPlatformFromProjectStorageHook is null)
+            {
+                var getMethod = typeof(VSUtilities).GetMethod("GetTargetPlatformFromProjectStorage", BindingFlags.NonPublic | BindingFlags.Static);
+                _getTargetPlatformFromProjectStorageHook = new Hook(getMethod, GetTargetPlatformFromProjectStorageHook);
+            }
+
+            //var assembly = typeof(VSDocOutlineProvider).Assembly;
+
+            /*if (_isValidToolboxItemSourceHook is null &&
+                assembly.GetType("MS.Internal.Package.Toolbox.ToolboxItemSourceBase", false, false)
+                is { } sourceBaseType)
+            {
+                var isValidToolboxItemSource = sourceBaseType.GetMethod("IsValidToolboxItemSource", BindingFlags.NonPublic | BindingFlags.Instance);
+                if (isValidToolboxItemSource is not null)
+                {
+                    _isValidToolboxItemSourceHook = new Hook(isValidToolboxItemSource, IsValidToolboxItemSourceHook);
+                }
+            }*/
+
+            /*if (_createToolboxItemDataHook is null &&
+                assembly.GetType("MS.Internal.Package.Toolbox.ProvideStaticUwpToolboxItemsAttribute", false, false)
+                is { } attrType)
+            {
+                var createToolboxItemData = attrType.GetMethod("CreateToolboxItemData", BindingFlags.NonPublic | BindingFlags.Static, null, [typeof(bool), typeof(string), typeof(IEnumerable<PlatformName>)], null);
+                _createToolboxItemDataHook = new Hook(createToolboxItemData, CreateToolboxItemDataHook);
+            }*/
+
+            /*if (_provideToolboxItemDiscoveryAttributeCctorHook is null)
+            {
+                var constructor = typeof(ProvideToolboxItemDiscoveryAttribute).GetConstructor([typeof(string), typeof(string), typeof(Type), typeof(Type), typeof(string[])]);
+                _provideToolboxItemDiscoveryAttributeCctorHook = new Hook(constructor, ProvideToolboxItemDiscoveryAttributeCctorHook);
+            }*/
+
+            /*if (_uwpToolboxMultiTargetingProviderCctorHook is null &&
+                assembly.GetType("MS.Internal.Package.Toolbox.UwpToolboxMultiTargetingProvider", false, false)
+                is { } providerType)
+            {
+                var IMarshaledServiceProviderType = assembly.GetType("MS.Internal.Package.Toolbox.IMarshaledServiceProvider", false, false);
+                var constructor = providerType.GetConstructor([typeof(FrameworkName[]), IMarshaledServiceProviderType]);
+                _uwpToolboxMultiTargetingProviderCctorHook = new Hook(constructor, UwpToolboxMultiTargetingProviderCctorHook);
+            }*/
         }
 
         protected override void Dispose(bool disposing)
@@ -104,6 +160,21 @@ namespace ModernUwpDesigner
 
             _updateRuntimeArchitectureHook?.Dispose();
             _updateRuntimeArchitectureHook = null;
+
+            _getTargetPlatformFromProjectStorageHook?.Dispose();
+            _getTargetPlatformFromProjectStorageHook = null;
+
+            //_isValidToolboxItemSourceHook?.Dispose();
+            //_isValidToolboxItemSourceHook = null;
+
+            //_createToolboxItemDataHook?.Dispose();
+            //_createToolboxItemDataHook = null;
+
+            //_provideToolboxItemDiscoveryAttributeCctorHook?.Dispose();
+            //_provideToolboxItemDiscoveryAttributeCctorHook = null;
+
+            //_uwpToolboxMultiTargetingProviderCctorHook?.Dispose();
+            //_uwpToolboxMultiTargetingProviderCctorHook = null;
 
             base.Dispose(disposing);
         }
@@ -142,5 +213,100 @@ namespace ModernUwpDesigner
                 original(instance, surfaceProcessInfo, hostProject);
             }
         }
+
+        private delegate PlatformName GetTargetPlatformFromProjectStorage(IVsBuildPropertyStorage projectStorage);
+
+        private PlatformName GetTargetPlatformFromProjectStorageHook(GetTargetPlatformFromProjectStorage original, IVsBuildPropertyStorage projectStorage)
+        {
+            var og = original(projectStorage);
+            if (og?.Identifier is "Windows" &&
+                og.Version.Build >= 26100 &&
+                VSUtilities.GetProjectFilePropertyValue((IVsHierarchy)projectStorage, "DefaultXamlRuntime", _PersistStorageType.PST_PROJECT_FILE)
+                is XamlRuntimeNames.UAP)
+            {
+                og = new(PlatformNames.UAP, og.Version, og.MinVersion);
+            }
+
+            return og;
+        }
+
+        /*private delegate bool IsValidToolboxItemSource(object instance, object resolver);
+
+        private unsafe bool IsValidToolboxItemSourceHook(IsValidToolboxItemSource original, object instance, object resolver)
+        {
+            if (GetResolutionMap is null)
+            {
+                GetResolutionMap = (delegate*<object, IDictionary<string, string>>)resolver.GetType().GetProperty("ResolutionMap", BindingFlags.Public | BindingFlags.Instance).GetMethod.MethodHandle.GetFunctionPointer();
+            }
+
+            if (GetResolutionMap is not null)
+            {
+                var resourceMap = GetResolutionMap(resolver);
+                foreach (var key in resourceMap.Keys)
+                {
+                    switch (key[0])
+                    {
+                        case 'M':
+                        case 'm':
+                            if (key.StartsWith("Microsoft.Windows.UI.Xaml,", StringComparison.OrdinalIgnoreCase))
+                            {
+                                return true;
+                            }
+
+                            break;
+                    }
+                }
+            }
+
+            return original(instance, resolver);
+        }*/
+
+        /*private delegate object CreateToolboxItemData(bool isCommon, string typeName, IEnumerable<PlatformName> targetPlatforms);
+
+        private unsafe object CreateToolboxItemDataHook(CreateToolboxItemData original, bool isCommon, string typeName, IEnumerable<PlatformName> targetPlatforms)
+        {
+            var assembly = typeof(VSDocOutlineProvider).Assembly;
+            var type = assembly.GetType("MS.Internal.Package.Toolbox.ToolboxItemData", false, false);
+
+            if (ToolboxItemDataCctor is null && type is not null)
+            {
+                var method = type.GetConstructor([typeof(bool), typeof(string), typeof(string), typeof(IEnumerable<PlatformName>)]);
+                if (method is not null)
+                {
+                    ToolboxItemDataCctor = (delegate*<object, bool, string, string, IEnumerable<PlatformName>, object>)method.MethodHandle.GetFunctionPointer();
+                }
+            }
+
+            if (ToolboxItemDataCctor is not null && type is not null)
+            {
+                string text = Assembly.CreateQualifiedName("Microsoft.Windows.UI.Xaml, Version=10.0.26100.52, Culture=neutral, PublicKeyToken=31bf3856ad364e35", typeName);
+
+                var instance = FormatterServices.GetUninitializedObject(type);
+                ToolboxItemDataCctor(instance, isCommon, text, null, targetPlatforms);
+                return instance;
+            }
+
+            return original(isCommon, typeName, targetPlatforms);
+        }*/
+
+        /*private delegate void ProvideToolboxItemDiscoveryAttributeCctor(ProvideToolboxItemDiscoveryAttribute instance, string name, string helpKeyword, Type discoveryType, Type itemCreatorType, string[] frameworksToEnumerate);
+
+        private void ProvideToolboxItemDiscoveryAttributeCctorHook(ProvideToolboxItemDiscoveryAttributeCctor original, ProvideToolboxItemDiscoveryAttribute instance, string name, string helpKeyword, Type discoveryType, Type itemCreatorType, string[] frameworksToEnumerate)
+        {
+            if (helpKeyword == "UniversalWindowsComponents")
+            {
+                original(instance, name, helpKeyword, discoveryType, itemCreatorType, [".NETCoreApp", .. frameworksToEnumerate]);
+                return;
+            }
+
+            original(instance, name, helpKeyword, discoveryType, itemCreatorType, frameworksToEnumerate);
+        }*/
+
+        /*private delegate void UwpToolboxMultiTargetingProviderCctor(object instance, FrameworkName[] currentTargetFrameworks, object serviceProvider);
+
+        private void UwpToolboxMultiTargetingProviderCctorHook(UwpToolboxMultiTargetingProviderCctor original, object instance, FrameworkName[] currentTargetFrameworks, object serviceProvider)
+        {
+            original(instance, [new(".NETCoreApp", new(10, 0)), ..currentTargetFrameworks], serviceProvider);
+        }*/
     }
 }

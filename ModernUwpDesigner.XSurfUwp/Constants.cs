@@ -1,6 +1,6 @@
 namespace XSurfUwp;
 
-public static class Constants
+internal static class Constants
 {
 	public const string getterPropertyMethodPrefix = "Get";
 
@@ -9,4 +9,6 @@ public static class Constants
 	public const string designTimeDeclaringTypePrefix = "XSurfUwp.DT.";
 
 	public const string systemTypeNamePrefix = "System.";
+
+	public const string InvertColorsVisualComment = "XSurfUwp.InvertColorsVisual";
 }

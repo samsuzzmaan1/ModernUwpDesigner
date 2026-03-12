@@ -56,7 +56,7 @@ public class UwpHostPlatform : HostPlatformBase
 
 	protected UwpHostPlatform(IServiceProvider serviceProvider, PlatformIdentifier platformIdentifier, IAppPackageHelper appPackageHelper)
         //: base(serviceProvider, platformIdentifier)
-        : base(serviceProvider, new PlatformIdentifier(new PlatformName(PlatformNames.UAP, platformIdentifier.TargetPlatformVersion), platformIdentifier.TargetRuntime, platformIdentifier.GetTargetFramework(), platformIdentifier.GetTargetSdk(), XamlRuntimeNames.UAP)) // HACK: FIX ME
+        : base(serviceProvider, new PlatformIdentifier(new PlatformName(PlatformNames.UAP, platformIdentifier.TargetPlatformVersion, platformIdentifier.TargetPlatformMinVersion), platformIdentifier.TargetRuntime, platformIdentifier.GetTargetFramework(), platformIdentifier.GetTargetSdk(), XamlRuntimeNames.UAP)) // HACK: FIX ME, Update: hack's reason got "fixed" but keeping it just in case
     {
 		AppPackageHelper = appPackageHelper ?? new AppPackageHelper();
 		ServiceProvider = serviceProvider;
