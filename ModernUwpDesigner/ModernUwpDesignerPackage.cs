@@ -56,6 +56,9 @@ namespace ModernUwpDesigner
         /// </summary>
         public const string PackageGuidString = "c87560ed-02e7-4c00-8dc6-b1ac79534ce4";
 
+        private const int MinimumSupportedRuntimeVersion = 10;
+        private const int MinimumSupportedSdkBuild = 26100;
+
         private static Hook _updateRuntimeArchitectureHook;
         private static Hook _incompatibleDesignerRuntimeArchitectureHook;
         private static Hook _getTargetPlatformFromProjectStorageHook;
@@ -67,8 +70,8 @@ namespace ModernUwpDesigner
         //private static unsafe delegate*<object, IDictionary<string, string>> GetResolutionMap;
         //private static unsafe delegate*<object, bool, string, string, IEnumerable<PlatformName>, object> ToolboxItemDataCctor;
 
-        //private static readonly PlatformSpecification ModernUwpSpecificationWindows = new("Windows", "10.0-..", ["Managed", "Native"], ".NETCoreApp", "10.0-..", null, "UAP", null);
-        private static readonly PlatformSpecification ModernUwpSpecificationUap = new("UAP", "10.0-..", ["Managed", "Native"], ".NETCoreApp", "10.0-..", null, "UAP", null);
+        private static readonly PlatformSpecification ModernUwpSpecificationUap = new(PlatformNames.UAP, "10.0-..", ["Managed", "Native"], FrameworkNames.NetCoreApp, "10.0-..", null, XamlRuntimeNames.UAP, null);
+        private static readonly PlatformSpecification ModernUwpSpecificationWindows = new(PlatformNames.Windows, "10.0-..", ["Managed", "Native"], FrameworkNames.NetCoreApp, "10.0-..", null, XamlRuntimeNames.UAP, null);
 
         protected override async Task InitializeAsync(CancellationToken cancellationToken, IProgress<ServiceProgressData> progress)
         {
@@ -77,8 +80,7 @@ namespace ModernUwpDesigner
 
             unsafe
             {
-                var RegisterPlatformConfiguration = (delegate*<PlatformSpecification, IDictionary<string, string>, void>)typeof(PlatformConfigurationService).GetMethod("RegisterPlatformConfiguration", BindingFlags.NonPublic | BindingFlags.Static).MethodHandle.GetFunctionPointer();
-                RegisterPlatformConfiguration(ModernUwpSpecificationUap, new Dictionary<string, string>
+                var platformProps = new Dictionary<string, string>
                 {
                     { "PlatformCreatorAssembly", "Microsoft.VisualStudio.DesignTools.UwpSurfaceDesigner" },
                     { "PlatformCreatorType", "Microsoft.VisualStudio.DesignTools.UwpSurfaceDesigner.UwpPlatformCreator" },
@@ -86,7 +88,7 @@ namespace ModernUwpDesigner
                     { "HostPlatformType", "Microsoft.VisualStudio.DesignTools.UwpDesignerHost.UwpHostPlatform" },
                     { "IsolationUnification", "true" },
                     { "ReferenceAssemblyMode", "None" },
-                    { "DefaultTargetFramework", ".NETCore, Version=10.0" },
+                    { "DefaultTargetFramework", $"{FrameworkNames.NetCoreApp}, Version={MinimumSupportedRuntimeVersion}.0" },
                     { "UserControlTemplateName", "MyUserControl.xaml" },
                     { "PlatformSurfaceIsolatedGuid", "{D617FC9B-7AE9-4219-B022-359A3D13B875}" },
                     { "SupportsToolboxAutoPopulation", "true" },
@@ -96,7 +98,11 @@ namespace ModernUwpDesigner
                     { "DesignerTechnology", "Microsoft:Windows.UI.Xaml" },
                     { "ClipboardFormat", "CF_WINDOWSUIXAML_TOOL" },
                     { "AppPackageType", "WindowsXaml" }
-                });
+                };
+
+                var RegisterPlatformConfiguration = (delegate*<PlatformSpecification, IDictionary<string, string>, void>)typeof(PlatformConfigurationService).GetMethod("RegisterPlatformConfiguration", BindingFlags.NonPublic | BindingFlags.Static).MethodHandle.GetFunctionPointer();
+                RegisterPlatformConfiguration(ModernUwpSpecificationUap, platformProps);
+                RegisterPlatformConfiguration(ModernUwpSpecificationWindows, platformProps);
             }
 
             if (RuntimeInformation.ProcessArchitecture is Architecture.Arm64 &&
@@ -104,16 +110,25 @@ namespace ModernUwpDesigner
                 _incompatibleDesignerRuntimeArchitectureHook is null)
             {
                 var property = typeof(UwpSceneView).GetProperty("IncompatibleDesignerRuntimeArchitecture", BindingFlags.NonPublic | BindingFlags.Instance);
-                _incompatibleDesignerRuntimeArchitectureHook = new Hook(property.GetMethod, IncompatibleDesignerRuntimeArchitectureHook);
+                if (property is not null)
+                {
+                    _incompatibleDesignerRuntimeArchitectureHook = new Hook(property.GetMethod, IncompatibleDesignerRuntimeArchitectureHook);
+                }
 
                 var method = typeof(HostPlatformBase).GetMethod("UpdateRuntimeArchitecture", BindingFlags.NonPublic | BindingFlags.Instance);
-                _updateRuntimeArchitectureHook = new Hook(method, UpdateRuntimeArchitectureHook);
+                if (method is not null)
+                {
+                    _updateRuntimeArchitectureHook = new Hook(method, UpdateRuntimeArchitectureHook);
+                }
             }
 
             if (_getTargetPlatformFromProjectStorageHook is null)
             {
-                var getMethod = typeof(VSUtilities).GetMethod("GetTargetPlatformFromProjectStorage", BindingFlags.NonPublic | BindingFlags.Static);
-                _getTargetPlatformFromProjectStorageHook = new Hook(getMethod, GetTargetPlatformFromProjectStorageHook);
+                var method = typeof(VSUtilities).GetMethod("GetTargetPlatformFromProjectStorage", BindingFlags.NonPublic | BindingFlags.Static);
+                if (method is not null)
+                {
+                    _getTargetPlatformFromProjectStorageHook = new Hook(method, GetTargetPlatformFromProjectStorageHook);
+                }
             }
 
             //var assembly = typeof(VSDocOutlineProvider).Assembly;
@@ -189,8 +204,8 @@ namespace ModernUwpDesigner
                 var platformIdentifier = hostProject.PlatformIdentifier;
 
                 if (hostProject.BuildPlatform.Equals("ARM64", StringComparison.OrdinalIgnoreCase) &&
-                    platformIdentifier.TargetFrameworkIdentifier.Equals(".NETCoreApp", StringComparison.Ordinal) &&
-                    platformIdentifier.TargetFrameworkVersion.Major >= 10)
+                    platformIdentifier.TargetFrameworkIdentifier.Equals(FrameworkNames.NetCoreApp, StringComparison.Ordinal) &&
+                    platformIdentifier.TargetFrameworkVersion.Major >= MinimumSupportedRuntimeVersion)
                 {
                     return false;
                 }
@@ -219,15 +234,38 @@ namespace ModernUwpDesigner
         private PlatformName GetTargetPlatformFromProjectStorageHook(GetTargetPlatformFromProjectStorage original, IVsBuildPropertyStorage projectStorage)
         {
             var og = original(projectStorage);
-            if (og?.Identifier is "Windows" &&
-                og.Version.Build >= 26100 &&
+            if (og is not null &&
+                og.Version.Build >= MinimumSupportedSdkBuild &&
+                og.Identifier.Equals(PlatformNames.Windows, StringComparison.Ordinal) &&
                 VSUtilities.GetProjectFilePropertyValue((IVsHierarchy)projectStorage, "DefaultXamlRuntime", _PersistStorageType.PST_PROJECT_FILE)
-                is XamlRuntimeNames.UAP)
+                .Equals(XamlRuntimeNames.UAP, StringComparison.Ordinal) &&
+                GetTargetFramework((IVsHierarchy)projectStorage) is { } framework &&
+                framework.Identifier.Equals(FrameworkNames.NetCoreApp, StringComparison.Ordinal) &&
+                framework.Version.Major >= MinimumSupportedRuntimeVersion)
             {
                 og = new(PlatformNames.UAP, og.Version, og.MinVersion);
             }
 
             return og;
+        }
+
+        private static FrameworkName GetTargetFramework(IVsHierarchy hierarchy)
+        {
+            hierarchy = hierarchy.GetEffectiveHierarchy();
+
+            if (hierarchy.GetProperty((uint)VSConstants.VSITEMID.Root, (int)__VSHPROPID4.VSHPROPID_TargetFrameworkMoniker, out object obj)
+                != 0)
+            {
+                return null;
+            }
+
+            string text = obj as string;
+            if (string.IsNullOrEmpty(text))
+            {
+                return null;
+            }
+
+            return new(text);
         }
 
         /*private delegate bool IsValidToolboxItemSource(object instance, object resolver);
