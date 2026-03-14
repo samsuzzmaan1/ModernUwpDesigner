@@ -56,7 +56,7 @@ namespace ModernUwpDesigner.XSurfUwp.Fody
 
                 // {
                 nop
-                // DesignInstance designInstance = (DesignInstance)instance;
+                // ((DesignInstance)instance).SetTypeValue(Value);
                 ldarg.1
                 castclass XSurfUwp.DesignInstance
                 ldarg.2
@@ -131,6 +131,7 @@ namespace ModernUwpDesigner.XSurfUwp.Fody
                 {
                     instructions.RemoveAt(i - 2);
                     instructions.RemoveAt(i - 3);
+                    typeSetterMethod.Body.Variables.RemoveAt(0);
                 }
                 else
                 {
