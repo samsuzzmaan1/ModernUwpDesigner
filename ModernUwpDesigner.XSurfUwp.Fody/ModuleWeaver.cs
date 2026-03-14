@@ -50,9 +50,6 @@ namespace ModernUwpDesigner.XSurfUwp.Fody
             .method private instance void set_4_DesignInstance_Type(object 'instance', object Value) cil managed 
             {
                 .maxstack 2
-                .locals init (
-                    [0] class XSurfUwp.DesignInstance that
-                )
 
                 // {
                 nop
