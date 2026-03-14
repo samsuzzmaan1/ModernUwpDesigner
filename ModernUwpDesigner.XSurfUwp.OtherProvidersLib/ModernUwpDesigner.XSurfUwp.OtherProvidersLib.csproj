@@ -18,5 +18,6 @@
 	<OutDir>bin\$(Configuration)\$(TargetFramework)\$(RuntimeIdentifier)\</OutDir>
 	<OutputPath>bin\$(Configuration)\$(TargetFramework)\$(RuntimeIdentifier)\</OutputPath>
 	<PublishDir>bin\$(Configuration)\$(TargetFramework)\$(RuntimeIdentifier)\</PublishDir>
+	<SuppressNETCoreSdkPreviewMessage>true</SuppressNETCoreSdkPreviewMessage>
   </PropertyGroup>
 </Project>

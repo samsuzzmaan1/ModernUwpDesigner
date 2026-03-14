@@ -31,15 +31,21 @@
   </PropertyGroup>
     
   <ItemGroup>
+    <PackageReference Include="Fody" Version="6.9.3">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
     <PackageReference Include="Microsoft.Windows.CsWinRT" Version="2.3.0-prerelease.251115.2" />
   </ItemGroup>
     
   <ItemGroup>
+    <ProjectReference Include="..\ModernUwpDesigner.XSurfUwp.Fody\ModernUwpDesigner.XSurfUwp.Fody.csproj" />
+	<WeaverFiles Include="..\ModernUwpDesigner.XSurfUwp.Fody\bin\$(Configuration)\netstandard2.0\ModernUwpDesigner.XSurfUwp.Fody.dll" />
     <ProjectReference Include="..\ModernUwpDesigner.XSurfUwp.OtherProvidersLib\ModernUwpDesigner.XSurfUwp.OtherProvidersLib.csproj">
-	  <ExcludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</ExcludeAssets>
+      <ExcludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</ExcludeAssets>
       <PrivateAssets>all</PrivateAssets>
       <Private>false</Private>
-	</ProjectReference>
+    </ProjectReference>
   </ItemGroup>
 
   <Target Name="CopyXbfAndAppxManifestToPublishDir" AfterTargets="_CreateFinalAppxManifestItem">

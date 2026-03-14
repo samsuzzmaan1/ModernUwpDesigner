@@ -20,6 +20,8 @@ Project("{D954291E-2A0B-460D-934E-DC6B0785DB48}") = "ModernUwpDesigner.Shared", 
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ModernUwpDesigner.XSurfUwp.OtherProvidersLib", "ModernUwpDesigner.XSurfUwp.OtherProvidersLib\ModernUwpDesigner.XSurfUwp.OtherProvidersLib.csproj", "{34759591-51CF-4540-B2A4-DA7E0B29B5A2}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ModernUwpDesigner.XSurfUwp.Fody", "ModernUwpDesigner.XSurfUwp.Fody\ModernUwpDesigner.XSurfUwp.Fody.csproj", "{CF127895-C21D-4C21-B748-A4B4259219BD}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -104,6 +106,22 @@ Global
 		{34759591-51CF-4540-B2A4-DA7E0B29B5A2}.Release|x64.Build.0 = Release|Any CPU
 		{34759591-51CF-4540-B2A4-DA7E0B29B5A2}.Release|x86.ActiveCfg = Release|Any CPU
 		{34759591-51CF-4540-B2A4-DA7E0B29B5A2}.Release|x86.Build.0 = Release|Any CPU
+		{CF127895-C21D-4C21-B748-A4B4259219BD}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{CF127895-C21D-4C21-B748-A4B4259219BD}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{CF127895-C21D-4C21-B748-A4B4259219BD}.Debug|arm64.ActiveCfg = Debug|Any CPU
+		{CF127895-C21D-4C21-B748-A4B4259219BD}.Debug|arm64.Build.0 = Debug|Any CPU
+		{CF127895-C21D-4C21-B748-A4B4259219BD}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{CF127895-C21D-4C21-B748-A4B4259219BD}.Debug|x64.Build.0 = Debug|Any CPU
+		{CF127895-C21D-4C21-B748-A4B4259219BD}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{CF127895-C21D-4C21-B748-A4B4259219BD}.Debug|x86.Build.0 = Debug|Any CPU
+		{CF127895-C21D-4C21-B748-A4B4259219BD}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{CF127895-C21D-4C21-B748-A4B4259219BD}.Release|Any CPU.Build.0 = Release|Any CPU
+		{CF127895-C21D-4C21-B748-A4B4259219BD}.Release|arm64.ActiveCfg = Release|Any CPU
+		{CF127895-C21D-4C21-B748-A4B4259219BD}.Release|arm64.Build.0 = Release|Any CPU
+		{CF127895-C21D-4C21-B748-A4B4259219BD}.Release|x64.ActiveCfg = Release|Any CPU
+		{CF127895-C21D-4C21-B748-A4B4259219BD}.Release|x64.Build.0 = Release|Any CPU
+		{CF127895-C21D-4C21-B748-A4B4259219BD}.Release|x86.ActiveCfg = Release|Any CPU
+		{CF127895-C21D-4C21-B748-A4B4259219BD}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

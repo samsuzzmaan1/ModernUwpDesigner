@@ -1,7 +1,6 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.Runtime.CompilerServices;
 using Windows.UI.Xaml.Data;
 using Windows.UI.Xaml.Markup;
 
@@ -10,7 +9,7 @@ namespace XSurfUwp;
 [Bindable]
 public partial class DesignInstance : MarkupExtension
 {
-    public Type Type { get; private set; }
+    public Type Type { get; set; }
 
     public bool IsDesignTimeCreatable { get; set; }
 
