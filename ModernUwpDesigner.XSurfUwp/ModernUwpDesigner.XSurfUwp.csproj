@@ -31,16 +31,10 @@
   </PropertyGroup>
     
   <ItemGroup>
-    <PackageReference Include="Fody" Version="6.9.3">
-      <PrivateAssets>all</PrivateAssets>
-      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
-    </PackageReference>
     <PackageReference Include="Microsoft.Windows.CsWinRT" Version="2.3.0-prerelease.251115.2" />
   </ItemGroup>
-    
+
   <ItemGroup>
-    <ProjectReference Include="..\ModernUwpDesigner.XSurfUwp.Fody\ModernUwpDesigner.XSurfUwp.Fody.csproj" />
-	<WeaverFiles Include="..\ModernUwpDesigner.XSurfUwp.Fody\bin\$(Configuration)\netstandard2.0\ModernUwpDesigner.XSurfUwp.Fody.dll" />
     <ProjectReference Include="..\ModernUwpDesigner.XSurfUwp.OtherProvidersLib\ModernUwpDesigner.XSurfUwp.OtherProvidersLib.csproj">
       <ExcludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</ExcludeAssets>
       <PrivateAssets>all</PrivateAssets>
@@ -64,5 +58,15 @@
         <CopyToPublishDirectory>Always</CopyToPublishDirectory>
       </ResolvedFileToPublish>
     </ItemGroup>
+  </Target>
+  
+  <Target Name="FixXamlTypeInfo" AfterTargets="MarkupCompilePass2">
+    <PropertyGroup>
+      <_XamlTypeInfoFile>$(XamlGeneratedOutputPath)\XamlTypeInfo.g.cs</_XamlTypeInfoFile>
+      <_XamlTypeInfoFileContent>$([System.IO.File]::ReadAllText('$(_XamlTypeInfoFile)'))</_XamlTypeInfoFileContent>
+      <_XamlTypeInfoFileContentReplaced>$([System.String]::Copy('$(_XamlTypeInfoFileContent)').Replace('that.Type = (global::System.Type)Value;', 'that.SetTypeValue(Value);'))</_XamlTypeInfoFileContentReplaced>
+    </PropertyGroup>
+
+    <WriteLinesToFile File="$(_XamlTypeInfoFile)" Lines="$(_XamlTypeInfoFileContentReplaced)" Overwrite="true" />
   </Target>
 </Project>
